@@ -39,12 +39,12 @@ public class CarRentalApplication implements CommandLineRunner {
 		insertCar("ABC 123", "Small", 0);
 		insertCar("CDE 123", "Small", 0);
 		insertCar("EFG 123", "Small", 0);
-		insertCar("ABC 123", "Van", 0);
-		insertCar("CDE 123", "Van", 0);
-		insertCar("EFG 123", "Van", 0);
-		insertCar("ABC 123", "Minibus", 0);
-		insertCar("CDE 123", "Minibus", 0);
-		insertCar("EFG 123", "Minibus", 0);
+		insertCar("ABC 456", "Van", 0);
+		insertCar("CDE 456", "Van", 0);
+		insertCar("EFG 456", "Van", 0);
+		insertCar("ABC 789", "Minibus", 0);
+		insertCar("CDE 789", "Minibus", 0);
+		insertCar("EFG 789", "Minibus", 0);
 	}
 
 	private int insertCar(String registration_plate, String car_type, int mileage){

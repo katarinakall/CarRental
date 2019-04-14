@@ -41,18 +41,15 @@ public class CarRentalRepositoryImpl implements CarRentalRepository {
             List<Car> cars = new ArrayList<>();
 
             try (ResultSet rs = ps.executeQuery()) {
-                if (!rs.next()) throw new CarRentalRepositoryException("No cars with car type " + car_type);
-                else {
+
                     while (rs.next()) {
                         cars.add(rsCar(rs));
                     }
                     return cars;
                 }
-
             } catch (SQLException e) {
                 throw new CarRentalRepositoryException(e);
             }
-        }
     }
 
     public List<Car> getAllCars(){
