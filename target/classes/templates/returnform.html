@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Return Form</title>
+    <link href="../static/css/formstyles.css" th:href="@{/css/formstyles.css}" rel="stylesheet" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+</head>
+ <div class="wrapper">
+     <div id="rentform">
+        <h1>Rental Form</h1>
+        <form >
+            <label>Enter Booking Number: </label>
+            <input type="text" required pattern="[0-9]{4,4}"  title="Enter Booking Number" maxLength="10" size="10"/>
+
+            <p><label>Enter Return Date and Time: </label>
+                <input type="date" id="returnDate"> <input type="time" name="returnTime" /></p>
+            <p><label>Mileage: <input type="number" min="1"/></label></p>
+            <input type="submit" value="Submit"/> <input type="reset" value="Reset" />
+        </form>
+     </div>
+    </div>
+</body>
+</html>

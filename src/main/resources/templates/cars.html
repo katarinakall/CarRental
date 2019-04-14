@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Cars</title>
+    <link href="../static/css/formstyles.css" th:href="@{/css/formstyles.css}" rel="stylesheet" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+
+</head>
+<body>
+<div class="availablecars" th:unless="${#lists.isEmpty(availableCars)}">
+
+        <h1 th:text="#{title.list}">List of Available Cars</h1>
+
+        <table>
+            <thead>
+            <tr>
+                <th>Id</th>
+                <th>Registration Plate</th>
+                <th>Mileage</th>
+
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="sb : ${allCars}">
+                <td th:text="#{car.id}">--</td>
+                <td th:text="#{car.registrationPlate}">--</td>
+                <td th:text="#{car.mileage}">--</td>
+                <td th:text="#{|seedstarter.type.${sb.type}|}"><button type="submit" name="selectCar">Select Car</button></td>
+
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+</html>
