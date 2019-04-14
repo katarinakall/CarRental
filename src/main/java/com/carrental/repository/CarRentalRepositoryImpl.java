@@ -5,8 +5,7 @@ import com.carrental.domain.CarType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,24 +33,55 @@ public class CarRentalRepositoryImpl implements CarRentalRepository {
     }
 
     @Override
-    public List<Car> getAvailableCars() {
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-        Car car = new Car("ABC 123", CarType.VAN, 0);
-        Car car1 = new Car("CDE 123", CarType.VAN, 0);
-        Car car2 = new Car("EFG 123", CarType.VAN, 0);
-        Car car3 = new Car("ABC 123", CarType.SMALL, 0);
-        Car car4 = new Car("CDE 123", CarType.SMALL, 0);
-        Car car5 = new Car("EFG 123", CarType.SMALL, 0);
-        Car car6 = new Car("ABC 123", CarType.MINIBUS, 0);
-        Car car7 = new Car("CDE 123", CarType.MINIBUS, 0);
-        Car car8 = new Car("EFG 123", CarType.MINIBUS, 0);
-        return null;
+    public List<Car> getAvailableCars(CarType car_type) throws SQLException {
+        try (Connection conn = dbConnection.getConnection();
+             Statement stmt = conn.createStatement();
+             PreparedStatement ps = conn.prepareStatement("SELECT * FROM cars WHERE car_type = ?")) {
+            ps.setString(1, car_type.getDisplayName());
+            List<Car> cars = new ArrayList<>();
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (!rs.next()) throw new CarRentalRepositoryException("No cars with car type " + car_type);
+                else {
+                    while (rs.next()) {
+                        cars.add(rsCar(rs));
+                    }
+                    return cars;
+                }
+
+            } catch (SQLException e) {
+                throw new CarRentalRepositoryException(e);
+            }
+        }
     }
+
+    public List<Car> getAllCars(){
+        try (Connection conn = dbConnection.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery("SELECT * FROM cars")) {
+            List<Car> cars = new ArrayList<>();
+            while (rs.next()) {
+                cars.add(rsCar(rs));
+            }
+            return cars;
+        } catch (SQLException e) {
+            throw new CarRentalRepositoryException(e);
+        }
+    }
+
 
     @Override
     public Car addCar(String registrationPlate, CarType carType, int mileage) {
-        Car car = new Car(registrationPlate, carType, mileage);
+        Car car = new Car(registrationPlate, carType.getDisplayName(), mileage);
         return car;
+    }
+
+    private Car rsCar(ResultSet rs) throws SQLException {
+        return new Car(
+                rs.getLong("id"),
+                rs.getString("registration_plate"),
+                rs.getString("car_type"),
+                rs.getInt("mileage")
+        );
     }
 }

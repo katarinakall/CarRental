@@ -9,7 +9,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.sql.SQLException;
 import java.util.List;
+
+import static com.carrental.domain.CarType.SMALL;
 
 @Controller
 public class CarRentalController {
@@ -33,9 +36,12 @@ public class CarRentalController {
     }
 
     @PostMapping("/rentform")
-    public String rentFormSubmit(@ModelAttribute RentalRequest request) {
-        System.out.println("***************" +request.getDateOfBirth() + " " + request.getLastFourDigits() + " ");
-        return "cars";
+    public ModelAndView rentFormSubmit(@ModelAttribute RentalRequest request) throws SQLException {
+        List<Car> cars = repository.getAvailableCars(request.getCarType());
+       // List<Car>cars = repository.getAllCars();
+        System.out.println(cars.toString());
+        return new ModelAndView("cars")
+                .addObject("cars", cars);
     }
 
     @GetMapping("/returnform")
@@ -43,10 +49,11 @@ public class CarRentalController {
         return new ModelAndView("returnform");
     }
 
-    @GetMapping("/cars")
-    public String getAvailableCars (){
-
-       return "cars";
-    }
+//    @GetMapping("/cars")
+//    public ModelAndView listAvailableCars (Model model) throws SQLException {
+//
+//        return new ModelAndView("cars")
+//        .addObject("cars", repository.getAvailableCars(SMALL));
+//    }
 
 }

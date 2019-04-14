@@ -1,16 +1,16 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Cars</title>
+    <meta charset="UTF-8"/>
+    <title>Rent Form</title>
     <link href="../static/css/formstyles.css" th:href="@{/css/formstyles.css}" rel="stylesheet" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
-
 </head>
 <body>
-<div class="availablecars" th:unless="${#lists.isEmpty(availableCars)}">
+<div class="wrapper">
+    <div class="availablecars">
 
-        <h1 th:text="#{title.list}">List of Available Cars</h1>
+        <h1>List of Available Cars</h1>
 
         <table>
             <thead>
@@ -18,15 +18,14 @@
                 <th>Id</th>
                 <th>Registration Plate</th>
                 <th>Mileage</th>
-
             </tr>
             </thead>
             <tbody>
-            <tr th:each="sb : ${allCars}">
-                <td th:text="#{car.id}">--</td>
-                <td th:text="#{car.registrationPlate}">--</td>
-                <td th:text="#{car.mileage}">--</td>
-                <td th:text="#{|seedstarter.type.${sb.type}|}"><button type="submit" name="selectCar">Select Car</button></td>
+            <tr th:each="car : ${cars}">
+                <td th:text="${car.id}">--</td>
+                <td th:text="${car.registrationPlate}">--</td>
+                <td th:text="${car.mileage}">--</td>
+                <td><button type="submit" name="selectCar">Select Car</button></td>
 
             </tr>
             </tbody>
