@@ -4,3 +4,4 @@
 th:unless="${#lists.isEmpty(availableCars)}"
 
 th:text="#{title.list}"
+

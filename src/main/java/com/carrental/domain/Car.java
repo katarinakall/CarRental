@@ -9,7 +9,7 @@ import javax.persistence.Id;
 @Data
 @Entity
 public class Car {
-    private @Id @GeneratedValue Long id;
+    private @Id @GeneratedValue int id;
     private String registrationPlate;
     private String carType;
     private int mileage;
@@ -23,7 +23,7 @@ public class Car {
         this.mileage = mileage;
     }
 
-    public Car(Long id, String registrationPlate, String carType, int mileage) {
+    public Car(int id, String registrationPlate, String carType, int mileage) {
         this.id = id;
         this.registrationPlate = registrationPlate;
         this.carType = carType;

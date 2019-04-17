@@ -10,7 +10,7 @@ import java.time.LocalTime;
 @Data
 public class RentalRequest {
     private LocalDate dateOfBirth;
-    private int lastFourDigits;
+    private String lastFourDigits;
     private CarType carType;
     private LocalDate pickUpDate;
     private LocalTime pickUpTime;

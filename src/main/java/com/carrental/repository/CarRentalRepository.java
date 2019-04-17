@@ -15,9 +15,9 @@ public interface CarRentalRepository {
     CarType[] getCarTypes();
     List<Car> getAllCars();
     List<Car> getAvailableCars(CarType car_type);
-    Car addCar(String registrationPlate, CarType carType, int mileage);
+    void selectCar(int carId, String ssn);
     void addBooking(RentalRequest rentalRequest);
-    void addCustomer(RentalRequest rentalRequest);
+    String getCustomerSsn(RentalRequest rentalRequest);
 
 
 }

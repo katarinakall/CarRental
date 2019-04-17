@@ -22,11 +22,11 @@
             </thead>
             <tbody>
             <tr th:each="car : ${cars}">
-                <td th:text="${car.id}">--</td>
                 <form action="#" th:action="@{/selectcar}" th:object="${car}" method="post">
+                <td th:text="${car.id}">--</td>
                 <td th:text="${car.registrationPlate}">--</td>
                 <td th:text="${car.mileage}">--</td>
-                <td><button type="submit" name="selectCar" th:value="${car}" >Select Car</button></td>
+                <td><button type="submit" name="selectCar" th:value="${car.id}">Select Car</button></td>
                 </form>
             </tr>
             </tbody>
