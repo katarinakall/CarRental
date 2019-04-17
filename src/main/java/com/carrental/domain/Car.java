@@ -13,6 +13,7 @@ public class Car {
     private String registrationPlate;
     private String carType;
     private int mileage;
+    private boolean available;
 
     public Car(){}
 

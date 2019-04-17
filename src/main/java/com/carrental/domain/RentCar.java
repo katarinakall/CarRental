@@ -10,6 +10,7 @@ public class RentCar {
     private Customer customer;
     private Car car;
     private LocalDate pickupDate;
+    private int bookingNumber;
     private LocalDate returnDate;
     private int mileageAtReturn;
     private int baseDayRental;

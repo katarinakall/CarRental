@@ -1,30 +1,25 @@
 package com.carrental;
 
 import com.carrental.domain.Car;
-import com.carrental.domain.CarType;
 import com.carrental.repository.CarRentalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+
 import java.sql.SQLException;
 import java.util.List;
 
-import static com.carrental.domain.CarType.SMALL;
 
 @Controller
 public class CarRentalController {
 
+    @Autowired
     private CarRentalRepository repository;
 
-    @Autowired
-    public CarRentalController(CarRentalRepository repository) {
-        this.repository = repository;
-    }
 
     @RequestMapping("/")
     public ModelAndView index() {
@@ -38,10 +33,10 @@ public class CarRentalController {
     }
 
     @PostMapping("/rentform")
-    public ModelAndView rentFormSubmit(@ModelAttribute RentalRequest request) throws SQLException {
+    public ModelAndView rentFormSubmit(@ModelAttribute RentalRequest request) {
         List<Car> cars = repository.getAvailableCars(request.getCarType());
-       // List<Car>cars = repository.getAllCars();
-        System.out.println(cars.toString());
+        repository.addBooking(request);
+        repository.addCustomer(request);
         return new ModelAndView("cars")
                 .addObject("cars", cars);
     }
@@ -58,11 +53,5 @@ public class CarRentalController {
         return new ModelAndView("returnform");
     }
 
-//    @GetMapping("/cars")
-//    public ModelAndView listAvailableCars (Model model) throws SQLException {
-//
-//        return new ModelAndView("cars")
-//        .addObject("cars", repository.getAvailableCars(SMALL));
-//    }
 
 }

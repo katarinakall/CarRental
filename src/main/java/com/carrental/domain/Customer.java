@@ -8,5 +8,4 @@ import java.time.LocalDate;
 public class Customer {
     private LocalDate dateOfBirth;
     private int lastFourDigits;
-    private int bookingNumber;
 }

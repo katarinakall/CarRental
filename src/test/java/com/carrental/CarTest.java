@@ -21,8 +21,8 @@ public class CarTest {
 
     @Test
     public void testCalculateNumberOfDays(){
-        LocalDate pickUpDate = new LocalDate(2019,03,01);
-        LocalDate returnDate = new LocalDate(2019,03,10);
+        LocalDate pickUpDate = new LocalDate(2019,3,1);
+        LocalDate returnDate = new LocalDate(2019,3,10);
 
         int nrOfDays = car.calculateNumberOfDays(pickUpDate, returnDate);
 

@@ -25,12 +25,5 @@ public class CarRentalRepositoryTest {
         MockitoAnnotations.initMocks(this);
     }
 
-//    @Test
-//    public void testGetCars() throws SQLException {
-//        List<Car> cars = new ArrayList<>();
-//
-//        cars = repository.getAvailableCars(CarType.SMALL);
-//
-//        System.out.println(cars.toString());
-//    }
+
 }

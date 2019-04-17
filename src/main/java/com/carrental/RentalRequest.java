@@ -3,8 +3,9 @@ package com.carrental;
 import com.carrental.domain.CarType;
 import lombok.Data;
 
-import org.joda.time.LocalDate;
-import org.joda.time.LocalTime;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Data
 public class RentalRequest {
