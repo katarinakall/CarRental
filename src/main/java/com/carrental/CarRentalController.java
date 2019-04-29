@@ -35,7 +35,7 @@ public class CarRentalController {
     }
 
     @PostMapping("/rentform")
-    public ModelAndView rentFormSubmit(@ModelAttribute RentalRequest request, HttpSession session) {
+    public ModelAndView submitRentForm(@ModelAttribute RentalRequest request, HttpSession session) {
         List<Car> cars = repository.getAvailableCars(request.getCarType());
         repository.addBooking(request);
         String ssn = repository.getCustomerSsn(request);
@@ -55,8 +55,14 @@ public class CarRentalController {
     }
 
     @GetMapping("/returnform")
-    public ModelAndView getReturnForm (){
-        return new ModelAndView("returnform");
+    public String getReturnForm (Model model) {
+        model.addAttribute("returnRequest", new ReturnRequest());
+        return "returnform";
+    }
+
+    @PostMapping("/returnform")
+    public void submitReturnForm(@ModelAttribute ReturnRequest request){
+        System.out.println(request.toString());
     }
 
 
