@@ -40,12 +40,12 @@ public class CarRentalApplication implements CommandLineRunner {
 		jdbcTemplate.execute("CREATE TABLE customers(id SERIAL, bday DATE, last_four_digits INT)");
 
 		jdbcTemplate.execute("DROP TABLE rent_cars IF EXISTS");
-		jdbcTemplate.execute("CREATE TABLE rent_cars(id SERIAL, customer_ssn VARCHAR(255), car_id INT, pick_up_date DATE, pick_up_time TIME, return_date DATE, return_time TIME, booking_number VARCHAR(255))");
+		jdbcTemplate.execute("CREATE TABLE rent_cars(id SERIAL, customer_ssn VARCHAR(255), car_id INT, pick_up_date DATE, pick_up_time TIME, return_date DATE, return_time TIME, booking_number VARCHAR(255), active BOOLEAN)");
 
 		insertCar("ABC 123", "Small", 0, true);
-		insertCar("CDE 123", "Small", 0, false);
+		insertCar("CDE 123", "Small", 0, true);
 		insertCar("EFG 123", "Small", 0, true);
-		insertCar("ABC 456", "Van", 0, false);
+		insertCar("ABC 456", "Van", 0, true);
 		insertCar("CDE 456", "Van", 0, true);
 		insertCar("EFG 456", "Van", 0, true);
 		insertCar("ABC 789", "Minibus", 0, true);

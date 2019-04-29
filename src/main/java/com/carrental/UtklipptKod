@@ -1,7 +1,4 @@
 
 
-
-th:unless="${#lists.isEmpty(availableCars)}"
-
-th:text="#{title.list}"
-
+  <label>Enter Booking Number: </label>
+            <input type="text" title="Enter Booking Number" th:field="*{bookingNumber}" maxLength="12" size="12" required pattern="[0-9]{12}"/>

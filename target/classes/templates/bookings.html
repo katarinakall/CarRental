@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Bookings</title>
+    <link href="../static/css/formstyles.css" th:href="@{/css/formstyles.css}" rel="stylesheet" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+</head>
+<body>
+<div class="wrapper" id="content">
+    <div class="bookings">
+
+        <h1>Bookings</h1>
+
+        <table>
+            <thead>
+            <tr>
+                <th>Customer</th>
+                <th>Car Id</th>
+                <th>Booking Number</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="booking : ${bookings}">
+                <form action="#" th:action="@{/returncar}" th:object="${booking}" method="post">
+                    <td th:text="${booking.customerSSN}">--</td>
+                    <td th:text="${booking.carId}">--</td>
+                    <td th:text="${booking.bookingNumber}">--</td>
+                    <td><button type="submit" name="returnCar" th:value="${booking.bookingNumber}">Return Car</button></td>
+                </form>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</body>
+</html>

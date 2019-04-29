@@ -1,5 +1,6 @@
 package com.carrental;
 
+import com.carrental.domain.Booking;
 import com.carrental.domain.Car;
 import com.carrental.repository.CarRentalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,25 +45,37 @@ public class CarRentalController {
                 .addObject("cars", cars);
     }
 
-
     @RequestMapping(value="/selectcar", method= RequestMethod.POST, params = {"selectCar"})
-    public String selectCar(HttpServletRequest request, HttpSession session){
+    public ModelAndView selectCar(HttpServletRequest request, HttpSession session){
         String car = request.getParameter("selectCar");
         int carId = Integer.parseInt(car);
         String ssn = session.getAttribute("ssn").toString();
         repository.selectCar(carId, ssn);
-        return "cars";
+        List<Booking> bookings = repository.getActiveBookings();
+        return new ModelAndView("bookings")
+                .addObject("bookings", bookings);
     }
 
-    @GetMapping("/returnform")
-    public String getReturnForm (Model model) {
+    @RequestMapping(value="/returncar", method = RequestMethod.POST, params = {"returnCar"})
+    public String returnCar(HttpServletRequest request, Model model, HttpSession session){
+        String bookingNumber = request.getParameter("returnCar");
+        session.setAttribute("bookingNumber", bookingNumber);
         model.addAttribute("returnRequest", new ReturnRequest());
         return "returnform";
     }
 
+    @GetMapping("/bookings")
+    public ModelAndView getAllBookings () {
+        List<Booking> bookings = repository.getActiveBookings();
+        return new ModelAndView("bookings")
+                .addObject("bookings", bookings);
+    }
+
     @PostMapping("/returnform")
-    public void submitReturnForm(@ModelAttribute ReturnRequest request){
-        System.out.println(request.toString());
+    public String submitReturnForm(@ModelAttribute ReturnRequest request, HttpSession session){
+        String bookingNumber = session.getAttribute("bookingNumber").toString();
+        repository.returnCar(request, bookingNumber);
+        return "startpage";
     }
 
 

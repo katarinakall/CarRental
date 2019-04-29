@@ -11,9 +11,6 @@
      <div id="rentform">
         <h1>Rental Form</h1>
          <form action="#" th:action="@{/returnform}" th:object="${returnRequest}" method="post">
-            <label>Enter Booking Number: </label>
-            <input type="text" title="Enter Booking Number" th:field="*{bookingNumber}" maxLength="12" size="12" required pattern="[0-9]{12}"/>
-
             <p><label>Enter Return Date and Time: </label>
                 <input type="date" th:field="*{returnDate}"> <input type="time" th:field="*{returnTime}" /></p>
             <p><label>Mileage: <input type="number" min="1" th:field="*{mileageAtReturn}"/></label></p>
