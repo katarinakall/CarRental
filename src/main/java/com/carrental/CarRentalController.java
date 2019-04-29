@@ -51,6 +51,7 @@ public class CarRentalController {
         int carId = Integer.parseInt(car);
         String ssn = session.getAttribute("ssn").toString();
         repository.selectCar(carId, ssn);
+        repository.toggleCarAvailability(carId, false);
         List<Booking> bookings = repository.getActiveBookings();
         return new ModelAndView("bookings")
                 .addObject("bookings", bookings);
@@ -75,7 +76,7 @@ public class CarRentalController {
     public String submitReturnForm(@ModelAttribute ReturnRequest request, HttpSession session){
         String bookingNumber = session.getAttribute("bookingNumber").toString();
         repository.returnCar(request, bookingNumber);
-        return "startpage";
+        return "cost";
     }
 
 

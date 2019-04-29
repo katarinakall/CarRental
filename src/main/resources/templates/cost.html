@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Cost</title>
+    <link href="../static/css/formstyles.css" th:href="@{/css/formstyles.css}" rel="stylesheet" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+</head>
+<body>
+<div th:fragment="content" id="cost">
+    <h2 th:text="'Total Cost: ' + ${cost}" />
+</div>
+
+</body>
+</html>

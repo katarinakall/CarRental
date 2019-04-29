@@ -22,7 +22,6 @@ public interface CarRentalRepository {
     void addBooking(RentalRequest rentalRequest);
     String getCustomerSsn(RentalRequest rentalRequest);
     void returnCar(ReturnRequest request, String bookingNumber);
-
-
+    void toggleCarAvailability(int carId, boolean available);
 }
 

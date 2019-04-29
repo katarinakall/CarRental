@@ -72,6 +72,19 @@ public class CarRentalRepositoryImpl implements CarRentalRepository {
         }
     }
 
+
+    @Override
+    public void toggleCarAvailability (int carId, boolean available){
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement("UPDATE cars SET  AVAILABLE = ? WHERE id = ?")) {
+            ps.setBoolean(1, available);
+            ps.setInt(2, carId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new CarRentalRepositoryException(e);
+        }
+    }
+
     @Override
     public List<Booking> getActiveBookings() {
         try (Connection conn = dataSource.getConnection();

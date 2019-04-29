@@ -2,3 +2,5 @@
 
   <label>Enter Booking Number: </label>
             <input type="text" title="Enter Booking Number" th:field="*{bookingNumber}" maxLength="12" size="12" required pattern="[0-9]{12}"/>
+
+            <p><label>Mileage: <input type="number" min="0" th:field="*{mileageAtPickup}"/></label></p>
