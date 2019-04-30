@@ -111,9 +111,9 @@ public class CarRentalRepositoryImpl implements CarRentalRepository {
 
         @Override
         public double calculateCost (ReturnRequest returnRequest, LocalDate pickUpDate, Car car){
-            double rentalCost = 0;
-            double baseDayRental = 0;
-            double kmPrice = 0;
+            double rentalCost = 100;
+            double baseDayRental = 100;
+            double kmPrice = 10;
             int numberOfDays = calculateNumberOfDays(pickUpDate, returnRequest.getReturnDate());
             int numberOfKm = calculateNumberOfKm(car.getMileage(), returnRequest.getMileageAtReturn());
 
