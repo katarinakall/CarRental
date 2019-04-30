@@ -73,9 +73,17 @@ public class CarRentalController {
     }
 
     @PostMapping("/returnform")
-    public String submitReturnForm(@ModelAttribute ReturnRequest request, HttpSession session){
+    public String submitReturnForm(@ModelAttribute ReturnRequest request, Model model, HttpSession session){
         String bookingNumber = session.getAttribute("bookingNumber").toString();
         repository.returnCar(request, bookingNumber);
+
+        Booking booking = repository.getBooking(bookingNumber);
+        Car car = repository.getCar(booking.getCarId());
+
+        double cost = repository.calculateCost(request, booking.getPickupDate(), car);
+
+        System.out.println(cost);
+
         return "cost";
     }
 
