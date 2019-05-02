@@ -24,7 +24,6 @@ public interface CarRentalRepository {
     String getCustomerSsn(RentalRequest rentalRequest);
     void returnCar(ReturnRequest request, String bookingNumber);
     void toggleCarAvailability(int carId, boolean available);
-    double calculateCost (ReturnRequest returnRequest, LocalDate pickUpDate, Car car);
     Booking getBooking(String bookingNumber);
     Car getCar(int id);
 }

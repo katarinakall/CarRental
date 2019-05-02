@@ -4,7 +4,6 @@ import com.carrental.domain.Booking;
 import com.carrental.domain.Car;
 import com.carrental.repository.CarRentalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -13,16 +12,19 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import java.sql.SQLException;
 import java.util.List;
 
 
 @Controller
 public class CarRentalController {
+    private CarRentalRepository repository;
+    private CarRentalService service;
 
     @Autowired
-    private CarRentalRepository repository;
-
+    public CarRentalController(CarRentalRepository repository, CarRentalService service) {
+        this.repository = repository;
+        this.service = service;
+    }
 
     @RequestMapping("/")
     public ModelAndView index() {
@@ -80,7 +82,7 @@ public class CarRentalController {
         Booking booking = repository.getBooking(bookingNumber);
         Car car = repository.getCar(booking.getCarId());
 
-        double cost = repository.calculateCost(request, booking.getPickupDate(), car);
+        double cost = service.calculateCost(request, booking.getPickupDate(), car);
 
         return new ModelAndView("cost")
                 .addObject("cost", cost);
