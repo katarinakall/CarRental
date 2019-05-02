@@ -84,7 +84,7 @@ public class CarRentalRepositoryImpl implements CarRentalRepository {
             ps.setString(2, ssn);
             ps.executeUpdate();
         } catch (SQLException e) {
-            throw new CarRentalRepositoryException("Error when selecting car with car id: " + carId + ". " +e);
+            throw new CarRentalRepositoryException("Error when selecting car with car id: " + carId + ". " + e);
         }
     }
 
@@ -113,6 +113,23 @@ public class CarRentalRepositoryImpl implements CarRentalRepository {
         } catch (SQLException e) {
             throw new CarRentalRepositoryException("Error when getting all active bookings. " + e);
         }
+    }
+
+    @Override
+    public List<Booking> getAllBookingsForCustomer(String ssn) {
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement("SELECT CUSTOMER_SSN, CAR_ID, PICK_UP_DATE, BOOKING_NUMBER FROM RENT_CARS WHERE customer_ssn=?")) {
+            ps.setString(1, ssn);
+            ResultSet rs = ps.executeQuery();
+                List<Booking> bookings = new ArrayList<>();
+                    while (rs.next()) {
+                        bookings.add(rsBooking(rs));
+                        }
+                    return bookings;
+        } catch (SQLException e) {
+            throw new CarRentalRepositoryException("Error when getting all bookings for customer with personal identification number: " + ssn + ". " + e);
+        }
+
     }
 
     @Override
@@ -160,6 +177,7 @@ public class CarRentalRepositoryImpl implements CarRentalRepository {
             throw new CarRentalRepositoryException("Error when returning car with booking number: " + bookingNumber + ". " + e);
         }
     }
+
     @Override
     public List<Customer> getAllCustomers() {
         try (Connection conn = dataSource.getConnection();
@@ -204,7 +222,7 @@ public class CarRentalRepositoryImpl implements CarRentalRepository {
         );
     }
 
-    private Customer rsCustomer(ResultSet rs) throws SQLException{
+    private Customer rsCustomer(ResultSet rs) throws SQLException {
         return new Customer(
                 rs.getString("name"),
                 rs.getString("surname"),

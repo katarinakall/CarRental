@@ -13,6 +13,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -91,6 +92,16 @@ public class CarRentalController {
         List<Customer> customers = repository.getAllCustomers();
         return new ModelAndView("customers")
                 .addObject("customers", customers);
+    }
+
+    @RequestMapping(value="/selectcustomer", method= RequestMethod.POST, params = {"selectCustomer"})
+    public ModelAndView getAllBookingsForCustomer(HttpServletRequest request){
+        String ssn = request.getParameter("selectCustomer");
+        List<Booking> bookings = repository.getAllBookingsForCustomer(ssn);
+        System.out.println(bookings.toString());
+        return new ModelAndView("bookings")
+                .addObject("bookings", bookings);
+
     }
 
 

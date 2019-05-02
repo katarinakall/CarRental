@@ -28,5 +28,6 @@ public interface CarRentalRepository {
     Booking getBooking(String bookingNumber);
     Car getCar(int id);
     List<Customer> getAllCustomers();
+    List<Booking> getAllBookingsForCustomer(String ssn);
 }
 
