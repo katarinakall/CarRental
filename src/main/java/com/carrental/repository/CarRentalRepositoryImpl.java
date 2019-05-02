@@ -6,6 +6,7 @@ import com.carrental.domain.Booking;
 import com.carrental.domain.Car;
 import com.carrental.domain.CarType;
 
+import com.carrental.domain.Customer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -73,6 +74,7 @@ public class CarRentalRepositoryImpl implements CarRentalRepository {
             throw new CarRentalRepositoryException("Error when getting car with car id: " + id + ". " + e);
         }
     }
+
 
     @Override
     public void selectCar(int carId, String ssn) {
@@ -158,6 +160,20 @@ public class CarRentalRepositoryImpl implements CarRentalRepository {
             throw new CarRentalRepositoryException("Error when returning car with booking number: " + bookingNumber + ". " + e);
         }
     }
+    @Override
+    public List<Customer> getAllCustomers() {
+        try (Connection conn = dataSource.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery("SELECT * FROM customers")) {
+            List<Customer> customers = new ArrayList<>();
+            while (rs.next()) {
+                customers.add(rsCustomer(rs));
+            }
+            return customers;
+        } catch (SQLException e) {
+            throw new CarRentalRepositoryException("Error when getting all customers. " + e);
+        }
+    }
 
     @Override
     public String getCustomerSsn(RentalRequest rentalRequest) {
@@ -185,6 +201,14 @@ public class CarRentalRepositoryImpl implements CarRentalRepository {
                 rs.getString("registration_plate"),
                 rs.getString("car_type"),
                 rs.getInt("mileage")
+        );
+    }
+
+    private Customer rsCustomer(ResultSet rs) throws SQLException{
+        return new Customer(
+                rs.getString("name"),
+                rs.getString("surname"),
+                rs.getString("ssn")
         );
     }
 }

@@ -8,6 +8,14 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
 </head>
  <div class="wrapper">
+     <div class="menu">
+         <ul>
+             <li><a href="/">Home</a> </li>
+             <li><a href="/customers">Customers</a></li>
+             <li><a href="/rentform">Rent</a></li>
+             <li><a href="/bookings">Bookings</a></li>
+         </ul>
+     </div>
      <div id="rentform">
         <h1>Rental Form</h1>
          <form action="#" th:action="@{/returnform}" th:object="${returnRequest}" method="post">

@@ -7,9 +7,21 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
 </head>
 <body>
+<div class="wrapper">
+    <div class="menu">
+        <ul>
+            <li><a href="/">Home</a> </li>
+            <li><a href="/customers">Customers</a></li>
+            <li><a href="/rentform">Rent</a></li>
+            <li><a href="/bookings">Bookings</a></li>
+        </ul>
+    </div>
 <div th:fragment="content" id="cost">
     <h2 th:text="'Total Cost: ' + ${cost} + ' sek'" />
 </div>
-
+<div class="buttons">
+    <button type="button" id="rent" class="btn btn-lg" onClick="location.href='/'">Return to Start Page</button>
+</div>
+</div>
 </body>
 </html>

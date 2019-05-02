@@ -6,6 +6,13 @@ import java.time.LocalDate;
 
 @Data
 public class Customer {
-    private LocalDate dateOfBirth;
-    private int lastFourDigits;
+    private String name;
+    private String surname;
+    private String ssn;
+
+    public Customer(String name, String surname, String ssn) {
+        this.name = name;
+        this.surname = surname;
+        this.ssn = ssn;
+    }
 }

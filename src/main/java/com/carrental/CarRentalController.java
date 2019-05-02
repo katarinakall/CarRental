@@ -2,6 +2,7 @@ package com.carrental;
 
 import com.carrental.domain.Booking;
 import com.carrental.domain.Car;
+import com.carrental.domain.Customer;
 import com.carrental.repository.CarRentalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,14 +18,11 @@ import java.util.List;
 
 @Controller
 public class CarRentalController {
+    @Autowired
     private CarRentalRepository repository;
-    private CarRentalService service;
 
     @Autowired
-    public CarRentalController(CarRentalRepository repository, CarRentalService service) {
-        this.repository = repository;
-        this.service = service;
-    }
+    private CarRentalService service;
 
     @RequestMapping("/")
     public ModelAndView index() {
@@ -87,6 +85,14 @@ public class CarRentalController {
         return new ModelAndView("cost")
                 .addObject("cost", cost);
     }
+
+    @GetMapping("/customers")
+    public ModelAndView getAllCustomers () {
+        List<Customer> customers = repository.getAllCustomers();
+        return new ModelAndView("customers")
+                .addObject("customers", customers);
+    }
+
 
 
 }

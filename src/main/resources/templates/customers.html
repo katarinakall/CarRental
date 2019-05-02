@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
-    <title>Rent Form</title>
+    <title>Customers</title>
     <link href="../static/css/formstyles.css" th:href="@{/css/formstyles.css}" rel="stylesheet" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
 </head>
@@ -16,25 +16,25 @@
             <li><a href="/bookings">Bookings</a></li>
         </ul>
     </div>
-    <div class="availablecars">
+    <div class="customers">
 
-        <h1>List of Available Cars</h1>
+        <h1>Customers</h1>
 
         <table>
             <thead>
             <tr>
-                <th>Id</th>
-                <th>Registration Plate</th>
-                <th>Mileage</th>
+                <th>Name</th>
+                <th>Surname</th>
+                <th>Personal identity number</th>
             </tr>
             </thead>
             <tbody>
-            <tr th:each="car : ${cars}">
-                <form action="#" th:action="@{/selectcar}" th:object="${car}" method="post">
-                <td th:text="${car.id}">--</td>
-                <td th:text="${car.registrationPlate}">--</td>
-                <td th:text="${car.mileage}">--</td>
-                <td><button type="submit" name="selectCar" th:value="${car.id}">Select Car</button></td>
+            <tr th:each="customer : ${customers}">
+                <form action="#" th:action="@{/selectcustomer}" th:object="${customer}" method="post">
+                    <td th:text="${customer.name}">--</td>
+                    <td th:text="${customer.surname}">--</td>
+                    <td th:text="${customer.ssn}">--</td>
+                    <td><button type="submit" name="selectCustomer" th:value="${customer.ssn}">Select Customer</button></td>
                 </form>
             </tr>
             </tbody>
@@ -43,6 +43,4 @@
 </div>
 
 </body>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
 </html>

@@ -5,6 +5,7 @@ import com.carrental.ReturnRequest;
 import com.carrental.domain.Booking;
 import com.carrental.domain.Car;
 import com.carrental.domain.CarType;
+import com.carrental.domain.Customer;
 import org.springframework.stereotype.Repository;
 
 import java.sql.SQLException;
@@ -26,5 +27,6 @@ public interface CarRentalRepository {
     void toggleCarAvailability(int carId, boolean available);
     Booking getBooking(String bookingNumber);
     Car getCar(int id);
+    List<Customer> getAllCustomers();
 }
 
