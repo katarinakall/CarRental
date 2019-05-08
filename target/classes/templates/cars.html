@@ -5,6 +5,7 @@
     <title>Cars</title>
     <link href="../static/css/formstyles.css" th:href="@{/css/formstyles.css}" rel="stylesheet" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
 </head>
 <body>
 <div class="wrapper">
@@ -19,6 +20,7 @@
                 <th>Id</th>
                 <th>Registration Plate</th>
                 <th>Mileage</th>
+                <th>Information</th>
             </tr>
             </thead>
             <tbody>
@@ -27,7 +29,7 @@
                     <td th:text="${car.id}">--</td>
                     <td th:text="${car.registrationPlate}">--</td>
                     <td th:text="${car.mileage}">--</td>
-                    <td><button type="submit" name="selectCar" th:value="${car.id}">Select Car</button></td>
+                    <td ><i class="fas fa-shower" th:if="${car.clean} == false"></i> <i class="fas fa-oil-can" th:if="${car.timesRented} % 3 == 0" th:unless="${car.timesRented} == 0"></i></td>
                 </form>
             </tr>
             </tbody>

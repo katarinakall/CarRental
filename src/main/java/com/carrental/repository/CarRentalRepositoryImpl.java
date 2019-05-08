@@ -230,7 +230,9 @@ public class CarRentalRepositoryImpl implements CarRentalRepository {
                 rs.getInt("id"),
                 rs.getString("registration_plate"),
                 rs.getString("car_type"),
-                rs.getInt("mileage")
+                rs.getInt("mileage"),
+                rs.getBoolean("clean"),
+                rs.getInt("times_rented")
         );
     }
 
