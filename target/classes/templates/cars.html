@@ -19,6 +19,7 @@
             <tr>
                 <th>Id</th>
                 <th>Registration Plate</th>
+                <th>Car Type</th>
                 <th>Mileage</th>
                 <th>Information</th>
             </tr>
@@ -28,8 +29,10 @@
                 <form action="#" th:action="@{/selectcar}" th:object="${car}" method="post">
                     <td th:text="${car.id}">--</td>
                     <td th:text="${car.registrationPlate}">--</td>
+                    <td th:text="${car.carType}">--</td>
                     <td th:text="${car.mileage}">--</td>
-                    <td ><i class="fas fa-shower" th:if="${car.clean} == false"></i> <i class="fas fa-oil-can" th:if="${car.timesRented} % 3 == 0" th:unless="${car.timesRented} == 0"></i></td>
+                    <td><i class="fas fa-shower" th:if="${car.clean} == false"></i> <i class="fas fa-oil-can" th:if="${car.timesRented} % 3 == 0" th:unless="${car.timesRented} == 0"></i></td>
+                    <td><button th:if="${car.mileage} >= 2000">Remove car</button></td>
                 </form>
             </tr>
             </tbody>

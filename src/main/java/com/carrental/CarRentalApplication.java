@@ -45,7 +45,7 @@ public class CarRentalApplication implements CommandLineRunner {
 		insertCar("ABC 123", "Small", 300, true, true, 3);
 		insertCar("CDE 123", "Small", 100, true, false, 1);
 		insertCar("EFG 123", "Small", 0, true, true, 6);
-		insertCar("ABC 456", "Van", 200, true, true, 2);
+		insertCar("ABC 456", "Van", 2000, true, true, 2);
 		insertCar("CDE 456", "Van", 100, true, false, 1);
 		insertCar("EFG 456", "Van", 0, true, true, 0);
 		insertCar("ABC 789", "Minibus", 0, true,true, 0);
