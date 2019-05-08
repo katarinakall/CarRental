@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <title>Return Form</title>
@@ -8,14 +8,8 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
 </head>
  <div class="wrapper">
-     <div class="menu">
-         <ul>
-             <li><a href="/">Home</a> </li>
-             <li><a href="/customers">Customers</a></li>
-             <li><a href="/rentform">Rent</a></li>
-             <li><a href="/bookings">Bookings</a></li>
-         </ul>
-     </div>
+     <div th:replace="template :: menu"></div>
+
      <div id="rentform">
         <h1>Rental Form</h1>
          <form action="#" th:action="@{/returnform}" th:object="${returnRequest}" method="post">

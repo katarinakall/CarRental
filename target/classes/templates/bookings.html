@@ -8,14 +8,8 @@
 </head>
 <body>
 <div class="wrapper" id="content">
-    <div class="menu">
-        <ul>
-            <li><a href="/">Home</a> </li>
-            <li><a href="/customers">Customers</a></li>
-            <li><a href="/rentform">Rent</a></li>
-            <li><a href="/bookings">Bookings</a></li>
-        </ul>
-    </div>
+    <div th:replace="template :: menu"></div>
+
     <div id="bookings">
 
         <h1>Bookings</h1>

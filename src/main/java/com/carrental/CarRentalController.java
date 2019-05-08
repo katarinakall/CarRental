@@ -13,7 +13,6 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -42,7 +41,7 @@ public class CarRentalController {
         repository.addBooking(request);
         String ssn = repository.getCustomerSsn(request);
         session.setAttribute("ssn", ssn);
-        return new ModelAndView("cars")
+        return new ModelAndView("availablecars")
                 .addObject("cars", cars);
     }
 
@@ -72,6 +71,12 @@ public class CarRentalController {
         return new ModelAndView("bookings")
                 .addObject("bookings", bookings);
     }
+    @GetMapping("/cars")
+    public ModelAndView getAllCars(){
+        List<Car> cars = repository.getAllCars();
+        return new ModelAndView("cars")
+                .addObject("cars", cars);
+    }
 
     @PostMapping("/returnform")
     public ModelAndView submitReturnForm(@ModelAttribute ReturnRequest request, HttpSession session){
@@ -79,6 +84,9 @@ public class CarRentalController {
         repository.returnCar(request, bookingNumber);
 
         Booking booking = repository.getBooking(bookingNumber);
+
+        repository.toggleCarAvailability(booking.getCarId(), true);
+        repository.updateCarMileage(booking.getCarId(), request.getMileageAtReturn());
         Car car = repository.getCar(booking.getCarId());
 
         double cost = service.calculateCost(request, booking.getPickupDate(), car);

@@ -14,6 +14,7 @@ public class Car {
     private String carType;
     private int mileage;
     private boolean available;
+    
 
     public Car(){}
 

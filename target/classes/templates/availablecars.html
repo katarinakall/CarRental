@@ -2,16 +2,17 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
-    <title>Cars</title>
+    <title>Rent Form</title>
     <link href="../static/css/formstyles.css" th:href="@{/css/formstyles.css}" rel="stylesheet" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
 </head>
 <body>
-<div class="wrapper">
+<div class="wrapper" id="content">
     <div th:replace="template :: menu"></div>
-    <div class="cars">
 
-        <h1>Cars</h1>
+    <div class="availablecars">
+
+        <h1>List of Available Cars</h1>
 
         <table>
             <thead>
@@ -24,17 +25,18 @@
             <tbody>
             <tr th:each="car : ${cars}">
                 <form action="#" th:action="@{/selectcar}" th:object="${car}" method="post">
-                    <td th:text="${car.id}">--</td>
-                    <td th:text="${car.registrationPlate}">--</td>
-                    <td th:text="${car.mileage}">--</td>
-                    <td><button type="submit" name="selectCar" th:value="${car.id}">Select Car</button></td>
+                <td th:text="${car.id}">--</td>
+                <td th:text="${car.registrationPlate}">--</td>
+                <td th:text="${car.mileage}">--</td>
+                <td><button type="submit" name="selectCar" th:value="${car.id}">Select Car</button></td>
                 </form>
             </tr>
             </tbody>
         </table>
     </div>
-
 </div>
 
 </body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
 </html>

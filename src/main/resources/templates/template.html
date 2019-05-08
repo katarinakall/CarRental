@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8"/>
+    <title>Title</title>
+    <link href="../static/css/startpage.css" th:href="@{/css/startpage.css}" rel="stylesheet" media="screen"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+</head>
+<body>
+<div class="menu" th:fragment="menu">
+    <ul>
+        <li><a href="/">Home</a> </li>
+        <li><a href="/customers">Customers</a></li>
+        <li><a href="/cars">Cars</a></li>
+        <li><a href="/rentform">Rent</a></li>
+        <li><a href="/bookings">Bookings</a></li>
+    </ul>
+</div>
+
+</body>
+</html>

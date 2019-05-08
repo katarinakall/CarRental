@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8"/>
     <title>Car Rental Application</title>
@@ -9,14 +9,7 @@
 </head>
 <body>
 <div class="wrapper">
-<div class="menu">
-<ul>
-    <li><a href="/">Home</a> </li>
-    <li><a href="/customers">Customers</a></li>
-    <li><a href="/rentform">Rent</a></li>
-    <li><a href="/bookings">Bookings</a></li>
-</ul>
-</div>
+<div th:replace="template :: menu"></div>
 <div class="jumbotron text-center">
     <h2>Car Rental Application</h2>
 </div>

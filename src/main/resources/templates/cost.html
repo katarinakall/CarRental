@@ -8,15 +8,9 @@
 </head>
 <body>
 <div class="wrapper">
-    <div class="menu">
-        <ul>
-            <li><a href="/">Home</a> </li>
-            <li><a href="/customers">Customers</a></li>
-            <li><a href="/rentform">Rent</a></li>
-            <li><a href="/bookings">Bookings</a></li>
-        </ul>
-    </div>
-<div th:fragment="content" id="cost">
+    <div th:replace="template :: menu"></div>
+
+    <div th:fragment="content" id="cost">
     <h2 th:text="'Total Cost: ' + ${cost} + ' sek'" />
 </div>
 <div class="buttons">

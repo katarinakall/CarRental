@@ -96,7 +96,19 @@ public class CarRentalRepositoryImpl implements CarRentalRepository {
             ps.setInt(2, carId);
             ps.executeUpdate();
         } catch (SQLException e) {
-            throw new CarRentalRepositoryException("Error when changing car availability. " + e);
+            throw new CarRentalRepositoryException("Error when changing car availability for car with car id: " + carId + ". " + e);
+        }
+    }
+
+    @Override
+    public void updateCarMileage(int carId, int mileage) {
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement("UPDATE cars SET  MILEAGE = ? WHERE id = ?")) {
+            ps.setInt(1, mileage);
+            ps.setInt(2, carId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new CarRentalRepositoryException("Error when updating car mileage for car with car id: " + carId + ". " + e);
         }
     }
 
@@ -121,11 +133,11 @@ public class CarRentalRepositoryImpl implements CarRentalRepository {
              PreparedStatement ps = conn.prepareStatement("SELECT CUSTOMER_SSN, CAR_ID, PICK_UP_DATE, BOOKING_NUMBER FROM RENT_CARS WHERE customer_ssn=?")) {
             ps.setString(1, ssn);
             ResultSet rs = ps.executeQuery();
-                List<Booking> bookings = new ArrayList<>();
-                    while (rs.next()) {
-                        bookings.add(rsBooking(rs));
-                        }
-                    return bookings;
+            List<Booking> bookings = new ArrayList<>();
+            while (rs.next()) {
+                bookings.add(rsBooking(rs));
+            }
+            return bookings;
         } catch (SQLException e) {
             throw new CarRentalRepositoryException("Error when getting all bookings for customer with personal identification number: " + ssn + ". " + e);
         }
