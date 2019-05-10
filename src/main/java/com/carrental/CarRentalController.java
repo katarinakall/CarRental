@@ -65,6 +65,31 @@ public class CarRentalController {
         return "returnform";
     }
 
+    @PostMapping("/managecar")
+    public ModelAndView manageCars (HttpServletRequest request){
+        String clean = request.getParameter("clean");
+        String service = request.getParameter("service");
+        String removeCar = request.getParameter("removeCar");
+
+        if(clean != null) {
+            int carId = Integer.parseInt(clean);
+            repository.toggleCarCleaning(carId, true);
+        }
+
+        if(service != null){
+            int carId = Integer.parseInt(service);
+            repository.toggleService(carId, false);
+        }
+
+        if(removeCar != null) {
+            System.out.println("remove car ---------" + removeCar);
+        }
+
+        List<Car> cars = repository.getAllCars();
+        return new ModelAndView("cars")
+                .addObject("cars", cars);
+    }
+
     @GetMapping("/bookings")
     public ModelAndView getAllBookings () {
         List<Booking> bookings = repository.getActiveBookings();
@@ -87,6 +112,9 @@ public class CarRentalController {
 
         repository.toggleCarAvailability(booking.getCarId(), true);
         repository.updateCarMileage(booking.getCarId(), request.getMileageAtReturn());
+        repository.updateTimesRented(booking.getCarId());
+        repository.toggleCarCleaning(booking.getCarId(), true);
+
         Car car = repository.getCar(booking.getCarId());
 
         double cost = service.calculateCost(request, booking.getPickupDate(), car);

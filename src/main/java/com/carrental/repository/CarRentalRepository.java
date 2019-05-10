@@ -25,6 +25,9 @@ public interface CarRentalRepository {
     String getCustomerSsn(RentalRequest rentalRequest);
     void returnCar(ReturnRequest request, String bookingNumber);
     void toggleCarAvailability(int carId, boolean available);
+    void toggleCarCleaning(int carId, boolean clean);
+    void toggleService(int carId, boolean service);
+    void updateTimesRented(int carId);
     void updateCarMileage(int carId, int mileage);
     Booking getBooking(String bookingNumber);
     Car getCar(int id);

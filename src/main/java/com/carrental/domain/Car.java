@@ -16,6 +16,7 @@ public class Car {
     private boolean available;
     private boolean clean;
     private int timesRented;
+    private boolean service;
 
     public Car(){}
 
@@ -25,12 +26,13 @@ public class Car {
         this.mileage = mileage;
     }
 
-    public Car(int id, String registrationPlate, String carType, int mileage, boolean clean, int timesRented) {
+    public Car(int id, String registrationPlate, String carType, int mileage, boolean clean, int timesRented, boolean service) {
         this.id = id;
         this.registrationPlate = registrationPlate;
         this.carType = carType;
         this.mileage = mileage;
         this.clean = clean;
         this.timesRented = timesRented;
+        this.service = service;
     }
 }

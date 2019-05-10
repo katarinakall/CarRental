@@ -101,6 +101,47 @@ public class CarRentalRepositoryImpl implements CarRentalRepository {
     }
 
     @Override
+    public void toggleCarCleaning(int carId, boolean clean) {
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement("UPDATE cars SET  CLEAN = ? WHERE id = ?")) {
+            ps.setBoolean(1, clean);
+            ps.setInt(2, carId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new CarRentalRepositoryException("Error when updating clean variable for car with car id: " + carId + ". " + e);
+        }
+    }
+
+    @Override
+    public void toggleService(int carId, boolean service) {
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement("UPDATE cars SET  SERVICE = ? WHERE id = ?")) {
+            ps.setBoolean(1, service);
+            ps.setInt(2, carId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new CarRentalRepositoryException("Error when updating service variable for car with car id: " + carId + ". " + e);
+        }
+    }
+
+    @Override
+    public void updateTimesRented(int carId) {
+        int timesRented = getCar(carId).getTimesRented();
+        timesRented = timesRented + 1;
+        if(timesRented % 3 == 0 && timesRented > 0){
+            toggleService(carId, true);
+        }
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement("UPDATE cars SET  times_rented = ? WHERE id = ?")) {
+            ps.setInt(1, timesRented);
+            ps.setInt(2, carId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new CarRentalRepositoryException("Error when updating times rented for car with car id: " + carId + ". " + e);
+        }
+    }
+
+    @Override
     public void updateCarMileage(int carId, int mileage) {
         try (Connection conn = dataSource.getConnection();
              PreparedStatement ps = conn.prepareStatement("UPDATE cars SET  MILEAGE = ? WHERE id = ?")) {
@@ -232,7 +273,8 @@ public class CarRentalRepositoryImpl implements CarRentalRepository {
                 rs.getString("car_type"),
                 rs.getInt("mileage"),
                 rs.getBoolean("clean"),
-                rs.getInt("times_rented")
+                rs.getInt("times_rented"),
+                rs.getBoolean("service")
         );
     }
 

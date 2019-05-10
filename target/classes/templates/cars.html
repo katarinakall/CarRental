@@ -26,13 +26,14 @@
             </thead>
             <tbody>
             <tr th:each="car : ${cars}">
-                <form action="#" th:action="@{/selectcar}" th:object="${car}" method="post">
+                <form action="#" th:action="@{/managecar}" th:object="${car}" method="post">
                     <td th:text="${car.id}">--</td>
                     <td th:text="${car.registrationPlate}">--</td>
                     <td th:text="${car.carType}">--</td>
                     <td th:text="${car.mileage}">--</td>
-                    <td><i class="fas fa-shower" th:if="${car.clean} == false"></i> <i class="fas fa-oil-can" th:if="${car.timesRented} % 3 == 0" th:unless="${car.timesRented} == 0"></i></td>
-                    <td><button th:if="${car.mileage} >= 2000">Remove car</button></td>
+                    <td><button th:if="${car.clean} == false" name="clean" th:value="${car.id}"><i class="fas fa-shower"></i></button>
+                        <button th:if="${car.service} == true" name="service" th:value="${car.id}"><i class="fas fa-oil-can"></i></button></td>
+                    <td><button th:if="${car.mileage} >= 2000" name="removeCar" th:value="${car.id}"><i class="fas fa-trash-alt"></i> Remove car </button></td>
                 </form>
             </tr>
             </tbody>

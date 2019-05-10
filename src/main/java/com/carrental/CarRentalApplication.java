@@ -34,7 +34,7 @@ public class CarRentalApplication implements CommandLineRunner {
 
 		log.info("Creating tables");
 		jdbcTemplate.execute("DROP TABLE cars IF EXISTS");
-		jdbcTemplate.execute("CREATE TABLE cars(id SERIAL, registration_plate VARCHAR(255), car_type VARCHAR(255), mileage INT, available BOOLEAN, clean BOOLEAN, times_rented INT)");
+		jdbcTemplate.execute("CREATE TABLE cars(id SERIAL, registration_plate VARCHAR(255), car_type VARCHAR(255), mileage INT, available BOOLEAN, clean BOOLEAN, times_rented INT, service BOOLEAN)");
 
 		jdbcTemplate.execute("DROP TABLE customers IF EXISTS");
 		jdbcTemplate.execute("CREATE TABLE customers(id SERIAL, ssn VARCHAR(255), name VARCHAR(255), surname VARCHAR(255))");
@@ -42,15 +42,15 @@ public class CarRentalApplication implements CommandLineRunner {
 		jdbcTemplate.execute("DROP TABLE rent_cars IF EXISTS");
 		jdbcTemplate.execute("CREATE TABLE rent_cars(id SERIAL, customer_ssn VARCHAR(255), car_id INT, pick_up_date DATE, pick_up_time TIME, return_date DATE, return_time TIME, booking_number VARCHAR(255), active BOOLEAN)");
 
-		insertCar("ABC 123", "Small", 300, true, true, 3);
-		insertCar("CDE 123", "Small", 100, true, false, 1);
-		insertCar("EFG 123", "Small", 0, true, true, 6);
-		insertCar("ABC 456", "Van", 2000, true, true, 2);
-		insertCar("CDE 456", "Van", 100, true, false, 1);
-		insertCar("EFG 456", "Van", 0, true, true, 0);
-		insertCar("ABC 789", "Minibus", 0, true,true, 0);
-		insertCar("CDE 789", "Minibus", 0, true, true, 0);
-		insertCar("EFG 789", "Minibus", 0, true, false, 0);
+		insertCar("ABC 123", "Small", 300, true, false, 3, true);
+		insertCar("CDE 123", "Small", 100, true, false, 1, false);
+		insertCar("EFG 123", "Small", 0, true, true, 6, true);
+		insertCar("ABC 456", "Van", 2000, true, true, 2, false);
+		insertCar("CDE 456", "Van", 100, true, false, 1, false);
+		insertCar("EFG 456", "Van", 0, true, true, 0, false);
+		insertCar("ABC 789", "Minibus", 0, true,true, 0, false);
+		insertCar("CDE 789", "Minibus", 0, true, true, 0, false);
+		insertCar("EFG 789", "Minibus", 0, true, false, 0, false);
 
 		insertCustomer("19900810-1234", "Arne", "Svensson");
 		insertCustomer("19810901-1234", "Anna", "Larsson");
@@ -60,18 +60,19 @@ public class CarRentalApplication implements CommandLineRunner {
 
 	}
 
-	private void insertCar(String registration_plate, String car_type, int mileage, boolean available, boolean clean, int times_rented){
+	private void insertCar(String registration_plate, String car_type, int mileage, boolean available, boolean clean, int times_rented, boolean service){
 			jdbcTemplate.update(
 					new PreparedStatementCreator() {
 						public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
 							PreparedStatement ps =
-									connection.prepareStatement("INSERT INTO cars(registration_plate,car_type,mileage,available,clean,times_rented) VALUES (?,?,?,?,?,?) ", new String[]{"id"});
+									connection.prepareStatement("INSERT INTO cars(registration_plate,car_type,mileage,available,clean,times_rented,service) VALUES (?,?,?,?,?,?,?) ", new String[]{"id"});
 							ps.setString(1, registration_plate);
 							ps.setString(2, car_type);
 							ps.setInt(3, mileage);
 							ps.setBoolean(4, available);
 							ps.setBoolean(5, clean);
 							ps.setInt(6, times_rented);
+							ps.setBoolean(7, service);
 							return ps;
 						}
 					});
