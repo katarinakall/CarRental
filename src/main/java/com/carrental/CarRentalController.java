@@ -82,7 +82,8 @@ public class CarRentalController {
         }
 
         if(removeCar != null) {
-            System.out.println("remove car ---------" + removeCar);
+            int carId = Integer.parseInt(removeCar);
+            repository.removeCar(carId);
         }
 
         List<Car> cars = repository.getAllCars();

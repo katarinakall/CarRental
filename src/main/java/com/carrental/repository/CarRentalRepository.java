@@ -29,6 +29,7 @@ public interface CarRentalRepository {
     void toggleService(int carId, boolean service);
     void updateTimesRented(int carId);
     void updateCarMileage(int carId, int mileage);
+    void removeCar(int carId);
     Booking getBooking(String bookingNumber);
     Car getCar(int id);
     List<Customer> getAllCustomers();

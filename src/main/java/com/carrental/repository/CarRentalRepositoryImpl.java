@@ -75,7 +75,6 @@ public class CarRentalRepositoryImpl implements CarRentalRepository {
         }
     }
 
-
     @Override
     public void selectCar(int carId, String ssn) {
         try (Connection conn = dataSource.getConnection();
@@ -150,6 +149,17 @@ public class CarRentalRepositoryImpl implements CarRentalRepository {
             ps.executeUpdate();
         } catch (SQLException e) {
             throw new CarRentalRepositoryException("Error when updating car mileage for car with car id: " + carId + ". " + e);
+        }
+    }
+
+    @Override
+    public void removeCar(int carId) {
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement("DELETE FROM cars WHERE id = ?")) {
+            ps.setInt(1, carId);
+            ps.executeUpdate();
+    } catch (SQLException e) {
+            throw new CarRentalRepositoryException("Error when deleting car with car id: " + carId + ". " + e);
         }
     }
 
