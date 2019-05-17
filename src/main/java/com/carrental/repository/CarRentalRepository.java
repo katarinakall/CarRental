@@ -30,6 +30,7 @@ public interface CarRentalRepository {
     void updateTimesRented(int carId);
     void updateCarMileage(int carId, int mileage);
     void removeCar(int carId);
+    void addNewCar(Car car);
     Booking getBooking(String bookingNumber);
     Car getCar(int id);
     List<Customer> getAllCustomers();

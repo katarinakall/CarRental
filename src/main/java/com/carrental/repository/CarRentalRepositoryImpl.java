@@ -164,6 +164,23 @@ public class CarRentalRepositoryImpl implements CarRentalRepository {
     }
 
     @Override
+    public void addNewCar(Car car) {
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement("INSERT INTO cars(registration_plate,car_type,mileage,available,clean,times_rented,service) VALUES (?,?,?,?,?,?,?)")) {
+            ps.setString(1, car.getRegistrationPlate());
+            ps.setString(2, car.getCarType());
+            ps.setInt(3, car.getMileage());
+            ps.setBoolean(4, true);
+            ps.setBoolean(5, true);
+            ps.setInt(6, 0);
+            ps.setBoolean(7, false);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new CarRentalRepositoryException("Error when adding new car. " + e);
+        }
+    }
+
+    @Override
     public List<Booking> getActiveBookings() {
         try (Connection conn = dataSource.getConnection();
              Statement stmt = conn.createStatement();

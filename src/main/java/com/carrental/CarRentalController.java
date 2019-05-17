@@ -106,6 +106,15 @@ public class CarRentalController {
                 .addObject("car", new Car());
     }
 
+    @PostMapping("/addcar")
+    public ModelAndView addNewCar(@ModelAttribute Car car){
+        repository.addNewCar(car);
+        List<Car> cars = repository.getAllCars();
+        return new ModelAndView("cars")
+                .addObject("cars", cars)
+                .addObject("car", new Car());
+        }
+
     @PostMapping("/returnform")
     public ModelAndView submitReturnForm(@ModelAttribute ReturnRequest request, HttpSession session){
         String bookingNumber = session.getAttribute("bookingNumber").toString();
