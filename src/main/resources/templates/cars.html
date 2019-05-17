@@ -6,6 +6,7 @@
     <link href="../static/css/formstyles.css" th:href="@{/css/formstyles.css}" rel="stylesheet" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+    <script type="text/javascript" th:src="@{/js/script.js}"></script>
 </head>
 <body>
 <div class="wrapper">
@@ -26,20 +27,33 @@
             </thead>
             <tbody>
             <tr th:each="car : ${cars}">
-                <form action="#" th:action="@{/managecar}" th:object="${car}" method="post">
+                <form action="#" th:action="@{/cars}" th:object="${car}" method="post">
                     <td th:text="${car.id}">--</td>
                     <td th:text="${car.registrationPlate}">--</td>
                     <td th:text="${car.carType}">--</td>
                     <td th:text="${car.mileage}">--</td>
-                    <td><button th:if="${car.clean} == false" name="clean" th:value="${car.id}"><i class="fas fa-shower"></i></button>
-                        <button th:if="${car.service} == true" name="service" th:value="${car.id}"><i class="fas fa-oil-can"></i></button></td>
+                    <td><button th:if="${car.clean} == false" name="clean" th:value="${car.id}"><span title="Clean"><i class="fas fa-shower"></i></span></button>
+                        <button th:if="${car.service} == true" name="service" th:value="${car.id}"><span title="Service"><i class="fas fa-oil-can"></i></span></button></td>
                     <td><button th:if="${car.mileage} >= 2000" name="removeCar" th:value="${car.id}"><i class="fas fa-trash-alt"></i> Remove car </button></td>
                 </form>
             </tr>
             </tbody>
         </table>
     </div>
-
+    <button onclick="toggleDiv(addCar)"><i class="fas fa-car"></i> Add new car</button>
+    <div id="addCar" style="display:none">
+        <form action="#" th:action="@{/addcar}" th:object="${car}" method="post">
+            <select id= "cartype" th:field="*{carType}">
+                <option value="">-- Select Car Type --</option>
+                <option th:each="carType : ${T(com.carrental.domain.CarType).values()}"
+                        th:value="${carType}"
+                        th:text="${carType.displayName}"/>
+            </select>
+            <p><label>Registration plate: <input type="text" title="Enter registration plate" maxLength="7" size="7" placeholder="ABC 123" th:field="*{registrationPlate}"/></label></p>
+            <p><label>Mileage: <input type="number" min="1" th:field="*{mileage}"/></label></p>
+            <p><input type="submit" value="Submit" /> <input type="reset" value="Reset" /></p>
+        </form>
+    </div>
 </div>
 
 </body>

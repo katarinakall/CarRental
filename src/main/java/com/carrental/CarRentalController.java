@@ -65,7 +65,7 @@ public class CarRentalController {
         return "returnform";
     }
 
-    @PostMapping("/managecar")
+    @PostMapping("/cars")
     public ModelAndView manageCars (HttpServletRequest request){
         String clean = request.getParameter("clean");
         String service = request.getParameter("service");
@@ -88,7 +88,8 @@ public class CarRentalController {
 
         List<Car> cars = repository.getAllCars();
         return new ModelAndView("cars")
-                .addObject("cars", cars);
+                .addObject("cars", cars)
+                .addObject("car", new Car());
     }
 
     @GetMapping("/bookings")
@@ -101,7 +102,8 @@ public class CarRentalController {
     public ModelAndView getAllCars(){
         List<Car> cars = repository.getAllCars();
         return new ModelAndView("cars")
-                .addObject("cars", cars);
+                .addObject("cars", cars)
+                .addObject("car", new Car());
     }
 
     @PostMapping("/returnform")
