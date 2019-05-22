@@ -50,7 +50,7 @@
                         th:value="${carType}"
                         th:text="${carType.displayName}"/>
             </select></label></p>
-            <p><label>Registration plate: <input type="text" title="Enter registration plate" maxLength="7" size="7" placeholder="ABC 123" th:field="*{registrationPlate}"/></label></p>
+            <p><label>Registration plate: <input type="text" title="Enter registration plate" maxLength="6" size="6" placeholder="ABC123" required th:field="*{registrationPlate}"/></label></p>
             <p><label>Mileage: <input type="number" th:field="*{mileage}"/></label></p>
             <p><input type="submit" value="Submit" /> <input type="reset" value="Reset" /></p>
         </form>

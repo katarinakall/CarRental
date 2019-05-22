@@ -13,9 +13,7 @@
     <div th:fragment="content" id="cost">
     <h2 th:text="'Total Cost: ' + ${cost} + ' sek'" />
 </div>
-<div class="buttons">
-    <button type="button" id="rent" class="btn btn-lg" onClick="location.href='/'">Return to Start Page</button>
-</div>
+<div th:replace="template :: startPageButton"/>
 </div>
 </body>
 </html>

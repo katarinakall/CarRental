@@ -14,10 +14,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 
 @Controller
 public class CarRentalController {
+
     @Autowired
     private CarRentalRepository repository;
 
@@ -45,7 +47,7 @@ public class CarRentalController {
                 .addObject("cars", cars);
     }
 
-    @RequestMapping(value="/selectcar", method= RequestMethod.POST, params = {"selectCar"})
+    @PostMapping("/selectcar")
     public ModelAndView selectCar(HttpServletRequest request, HttpSession session){
         String car = request.getParameter("selectCar");
         int carId = Integer.parseInt(car);
@@ -151,7 +153,5 @@ public class CarRentalController {
                 .addObject("bookings", bookings);
 
     }
-
-
 
 }

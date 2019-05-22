@@ -1,16 +1,11 @@
 package com.carrental;
 
-import com.carrental.domain.CarType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -22,9 +17,6 @@ public class CarRentalApplication implements CommandLineRunner {
 	@Autowired
 	JdbcTemplate jdbcTemplate;
 
-	private static final Logger log = LoggerFactory.getLogger(CarRentalApplication.class);
-
-
 	public static void main(String[] args) {
 		SpringApplication.run(CarRentalApplication.class, args);
 	}
@@ -32,7 +24,6 @@ public class CarRentalApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 
-		log.info("Creating tables");
 		jdbcTemplate.execute("DROP TABLE cars IF EXISTS");
 		jdbcTemplate.execute("CREATE TABLE cars(id SERIAL, registration_plate VARCHAR(255), car_type VARCHAR(255), mileage INT, available BOOLEAN, clean BOOLEAN, times_rented INT, service BOOLEAN)");
 
@@ -41,6 +32,10 @@ public class CarRentalApplication implements CommandLineRunner {
 
 		jdbcTemplate.execute("DROP TABLE rent_cars IF EXISTS");
 		jdbcTemplate.execute("CREATE TABLE rent_cars(id SERIAL, customer_ssn VARCHAR(255), car_id INT, pick_up_date DATE, pick_up_time TIME, return_date DATE, return_time TIME, booking_number VARCHAR(255), active BOOLEAN)");
+
+		jdbcTemplate.execute("DROP TABLE events IF EXISTS");
+		jdbcTemplate.execute("CREATE TABLE events(id SERIAL, log_date DATE, log_time TIME, customer_ssn VARCHAR(255), car_id INT, log VARCHAR(255)");
+
 
 		insertCar("ABC 123", "Small", 300, true, false, 3, true);
 		insertCar("CDE 123", "Small", 100, true, false, 1, false);

@@ -2,18 +2,21 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
-    <title>Cost</title>
+    <title>Logger</title>
     <link href="../static/css/formstyles.css" th:href="@{/css/formstyles.css}" rel="stylesheet" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
 </head>
 <body>
-<div class="wrapper">
+<div class="wrapper" id="content">
     <div th:replace="template :: menu"></div>
 
-    <div th:fragment="content" id="cost">
-    <h2 th:text="'Total Cost: ' + ${cost} + ' sek'" />
+    <div class="log">
+
+        <h1>Log</h1>
+
+        <ul th:each="log : ${logs}"></ul>
+    </div>
 </div>
-<div th:replace="template :: startPageButton"/>
-</div>
+
 </body>
 </html>

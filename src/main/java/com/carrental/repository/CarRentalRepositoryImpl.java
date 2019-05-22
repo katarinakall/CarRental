@@ -1,5 +1,7 @@
 package com.carrental.repository;
 
+import com.carrental.CarRentalApplication;
+import com.carrental.EventLogger;
 import com.carrental.RentalRequest;
 import com.carrental.ReturnRequest;
 import com.carrental.domain.Booking;
@@ -8,15 +10,22 @@ import com.carrental.domain.CarType;
 
 import com.carrental.domain.Customer;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
 import java.sql.*;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
+
 
 @Component
 public class CarRentalRepositoryImpl implements CarRentalRepository {
+
+    private EventLogger log = new EventLogger();
 
     @Autowired
     private DataSource dataSource;
@@ -82,6 +91,9 @@ public class CarRentalRepositoryImpl implements CarRentalRepository {
             ps.setInt(1, carId);
             ps.setString(2, ssn);
             ps.executeUpdate();
+
+            log.info("Customer with ssn: " + ssn + " rented car with id: " + carId);
+
         } catch (SQLException e) {
             throw new CarRentalRepositoryException("Error when selecting car with car id: " + carId + ". " + e);
         }
@@ -106,6 +118,10 @@ public class CarRentalRepositoryImpl implements CarRentalRepository {
             ps.setBoolean(1, clean);
             ps.setInt(2, carId);
             ps.executeUpdate();
+
+            if (clean) {
+                log.info("Car with id: " + carId + " has been cleaned.");
+            }
         } catch (SQLException e) {
             throw new CarRentalRepositoryException("Error when updating clean variable for car with car id: " + carId + ". " + e);
         }
@@ -118,6 +134,10 @@ public class CarRentalRepositoryImpl implements CarRentalRepository {
             ps.setBoolean(1, service);
             ps.setInt(2, carId);
             ps.executeUpdate();
+
+            if (!service) {
+                log.info("Car with id: " + carId + " has been sent to service.");
+            }
         } catch (SQLException e) {
             throw new CarRentalRepositoryException("Error when updating service variable for car with car id: " + carId + ". " + e);
         }
@@ -127,7 +147,7 @@ public class CarRentalRepositoryImpl implements CarRentalRepository {
     public void updateTimesRented(int carId) {
         int timesRented = getCar(carId).getTimesRented();
         timesRented = timesRented + 1;
-        if(timesRented % 3 == 0 && timesRented > 0){
+        if (timesRented % 3 == 0 && timesRented > 0) {
             toggleService(carId, true);
         }
         try (Connection conn = dataSource.getConnection();
@@ -158,7 +178,10 @@ public class CarRentalRepositoryImpl implements CarRentalRepository {
              PreparedStatement ps = conn.prepareStatement("DELETE FROM cars WHERE id = ?")) {
             ps.setInt(1, carId);
             ps.executeUpdate();
-    } catch (SQLException e) {
+
+            log.info("Car with id: " + carId + " has been removed.");
+
+        } catch (SQLException e) {
             throw new CarRentalRepositoryException("Error when deleting car with car id: " + carId + ". " + e);
         }
     }
@@ -167,14 +190,17 @@ public class CarRentalRepositoryImpl implements CarRentalRepository {
     public void addNewCar(Car car) {
         try (Connection conn = dataSource.getConnection();
              PreparedStatement ps = conn.prepareStatement("INSERT INTO cars(registration_plate,car_type,mileage,available,clean,times_rented,service) VALUES (?,?,?,?,?,?,?)")) {
-            ps.setString(1, car.getRegistrationPlate());
-            ps.setString(2, car.getCarType());
+            ps.setString(1, registrationPlate(car.getRegistrationPlate()));
+            ps.setString(2, carType(car.getCarType()));
             ps.setInt(3, car.getMileage());
             ps.setBoolean(4, true);
             ps.setBoolean(5, true);
             ps.setInt(6, 0);
             ps.setBoolean(7, false);
             ps.executeUpdate();
+
+            log.info("A new car has been added.");
+
         } catch (SQLException e) {
             throw new CarRentalRepositoryException("Error when adding new car. " + e);
         }
@@ -253,6 +279,11 @@ public class CarRentalRepositoryImpl implements CarRentalRepository {
             ps.setBoolean(3, false);
             ps.setString(4, bookingNumber);
             ps.executeUpdate();
+
+            Booking booking = getBooking(bookingNumber);
+
+            log.info("Customer with ssn: " + booking.getCustomerSSN() + " have returned car with id: " + booking.getCarId());
+
         } catch (SQLException e) {
             throw new CarRentalRepositoryException("Error when returning car with booking number: " + bookingNumber + ". " + e);
         }
@@ -273,10 +304,37 @@ public class CarRentalRepositoryImpl implements CarRentalRepository {
         }
     }
 
+
     @Override
     public String getCustomerSsn(RentalRequest rentalRequest) {
         String customerSsn = (rentalRequest.getDateOfBirth().toString()).replace("-", "") + "-" + rentalRequest.getLastFourDigits();
         return customerSsn;
+    }
+
+    private void insertLog(LocalDate date, LocalTime time, String customer_ssn, int car_id, String log) {
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement("INSERT INTO events(log_date, log_time, customer_ssn, car_id, log) VALUES (?,?,?,?,?)")) {
+            ps.setDate(1, Date.valueOf(date));
+            ps.setTime(2, Time.valueOf(time) );
+            ps.setString(3, customer_ssn);
+            ps.setInt(4, car_id);
+            ps.setString(5, log);
+
+        } catch (SQLException e) {
+            throw new CarRentalRepositoryException("Error when inserting log to database. " + e);
+        }
+    }
+
+    private String registrationPlate(String registrationPlate) {
+        String str = registrationPlate.toUpperCase();
+        str = new StringBuilder(str).insert(str.length() - 3, ' ').toString();
+        return str;
+    }
+
+    private String carType(String carType) {
+        char c = carType.charAt(0);
+        String str = carType.substring(1).toLowerCase();
+        return c + str;
     }
 
     private String generateBookingNumber(RentalRequest request) {
