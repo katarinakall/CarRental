@@ -13,9 +13,8 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import java.math.BigDecimal;
 import java.util.List;
-import java.util.logging.Logger;
-
 
 @Controller
 public class CarRentalController {
@@ -48,7 +47,7 @@ public class CarRentalController {
     }
 
     @PostMapping("/selectcar")
-    public ModelAndView selectCar(HttpServletRequest request, HttpSession session){
+    public ModelAndView selectCar(HttpServletRequest request, HttpSession session) {
         String car = request.getParameter("selectCar");
         int carId = Integer.parseInt(car);
         String ssn = session.getAttribute("ssn").toString();
@@ -59,8 +58,8 @@ public class CarRentalController {
                 .addObject("bookings", bookings);
     }
 
-    @RequestMapping(value="/returncar", method = RequestMethod.POST, params = {"returnCar"})
-    public String returnCar(HttpServletRequest request, Model model, HttpSession session){
+    @RequestMapping(value = "/returncar", method = RequestMethod.POST, params = {"returnCar"})
+    public String returnCar(HttpServletRequest request, Model model, HttpSession session) {
         String bookingNumber = request.getParameter("returnCar");
         session.setAttribute("bookingNumber", bookingNumber);
         model.addAttribute("returnRequest", new ReturnRequest());
@@ -68,22 +67,22 @@ public class CarRentalController {
     }
 
     @PostMapping("/cars")
-    public ModelAndView manageCars (HttpServletRequest request){
+    public ModelAndView manageCars(HttpServletRequest request) {
         String clean = request.getParameter("clean");
         String service = request.getParameter("service");
         String removeCar = request.getParameter("removeCar");
 
-        if(clean != null) {
+        if (clean != null) {
             int carId = Integer.parseInt(clean);
             repository.toggleCarCleaning(carId, true);
         }
 
-        if(service != null){
+        if (service != null) {
             int carId = Integer.parseInt(service);
             repository.toggleService(carId, false);
         }
 
-        if(removeCar != null) {
+        if (removeCar != null) {
             int carId = Integer.parseInt(removeCar);
             repository.removeCar(carId);
         }
@@ -95,13 +94,14 @@ public class CarRentalController {
     }
 
     @GetMapping("/bookings")
-    public ModelAndView getAllBookings () {
+    public ModelAndView getAllBookings() {
         List<Booking> bookings = repository.getActiveBookings();
         return new ModelAndView("bookings")
                 .addObject("bookings", bookings);
     }
+
     @GetMapping("/cars")
-    public ModelAndView getAllCars(){
+    public ModelAndView getAllCars() {
         List<Car> cars = repository.getAllCars();
         return new ModelAndView("cars")
                 .addObject("cars", cars)
@@ -109,43 +109,39 @@ public class CarRentalController {
     }
 
     @PostMapping("/addcar")
-    public ModelAndView addNewCar(@ModelAttribute Car car){
+    public ModelAndView addNewCar(@ModelAttribute Car car) {
         repository.addNewCar(car);
         List<Car> cars = repository.getAllCars();
         return new ModelAndView("cars")
                 .addObject("cars", cars)
                 .addObject("car", new Car());
-        }
+    }
 
     @PostMapping("/returnform")
-    public ModelAndView submitReturnForm(@ModelAttribute ReturnRequest request, HttpSession session){
+    public ModelAndView submitReturnForm(@ModelAttribute ReturnRequest request, HttpSession session) {
         String bookingNumber = session.getAttribute("bookingNumber").toString();
         repository.returnCar(request, bookingNumber);
 
         Booking booking = repository.getBooking(bookingNumber);
 
-        repository.toggleCarAvailability(booking.getCarId(), true);
-        repository.updateCarMileage(booking.getCarId(), request.getMileageAtReturn());
-        repository.updateTimesRented(booking.getCarId());
-        repository.toggleCarCleaning(booking.getCarId(), true);
+       service.updateReturnedCar(booking.getCarId(), request.getMileageAtReturn());
 
         Car car = repository.getCar(booking.getCarId());
-
-        double cost = service.calculateCost(request, booking.getPickupDate(), car);
+        BigDecimal cost = service.calculateCost(request, booking.getPickupDate(), car);
 
         return new ModelAndView("cost")
                 .addObject("cost", cost);
     }
 
     @GetMapping("/customers")
-    public ModelAndView getAllCustomers () {
+    public ModelAndView getAllCustomers() {
         List<Customer> customers = repository.getAllCustomers();
         return new ModelAndView("customers")
                 .addObject("customers", customers);
     }
 
-    @RequestMapping(value="/selectcustomer", method= RequestMethod.POST, params = {"selectCustomer"})
-    public ModelAndView getAllBookingsForCustomer(HttpServletRequest request){
+    @RequestMapping(value = "/selectcustomer", method = RequestMethod.POST, params = {"selectCustomer"})
+    public ModelAndView getAllBookingsForCustomer(HttpServletRequest request) {
         String ssn = request.getParameter("selectCustomer");
         List<Booking> bookings = repository.getAllBookingsForCustomer(ssn);
         System.out.println(bookings.toString());
