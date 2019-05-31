@@ -282,7 +282,9 @@ public class CarRentalRepositoryImpl implements CarRentalRepository {
 
             Booking booking = getBooking(bookingNumber);
 
-            log.info("Customer with ssn: " + booking.getCustomerSSN() + " have returned car with id: " + booking.getCarId());
+            String log = "Customer with ssn: " + booking.getCustomerSSN() + " have returned car with id: " + booking.getCarId();
+            insertLog(LocalDate.now(), LocalTime.now(), booking.getCustomerSSN(), booking.getCarId(), log);
+
 
         } catch (SQLException e) {
             throw new CarRentalRepositoryException("Error when returning car with booking number: " + bookingNumber + ". " + e);
@@ -304,10 +306,9 @@ public class CarRentalRepositoryImpl implements CarRentalRepository {
         }
     }
 
-
     @Override
     public String getCustomerSsn(RentalRequest rentalRequest) {
-        String customerSsn = (rentalRequest.getDateOfBirth().toString()).replace("-", "") + "-" + rentalRequest.getLastFourDigits();
+        String customerSsn = (rentalRequest.getDateOfBirth() + "-" + rentalRequest.getLastFourDigits());
         return customerSsn;
     }
 
@@ -319,6 +320,7 @@ public class CarRentalRepositoryImpl implements CarRentalRepository {
             ps.setString(3, customer_ssn);
             ps.setInt(4, car_id);
             ps.setString(5, log);
+            ps.executeUpdate();
 
         } catch (SQLException e) {
             throw new CarRentalRepositoryException("Error when inserting log to database. " + e);

@@ -58,7 +58,7 @@ public class CarRentalController {
                 .addObject("bookings", bookings);
     }
 
-    @RequestMapping(value = "/returncar", method = RequestMethod.POST, params = {"returnCar"})
+    @PostMapping("/returncar")
     public String returnCar(HttpServletRequest request, Model model, HttpSession session) {
         String bookingNumber = request.getParameter("returnCar");
         session.setAttribute("bookingNumber", bookingNumber);
@@ -140,7 +140,7 @@ public class CarRentalController {
                 .addObject("customers", customers);
     }
 
-    @RequestMapping(value = "/selectcustomer", method = RequestMethod.POST, params = {"selectCustomer"})
+    @PostMapping("/selectcustomer")
     public ModelAndView getAllBookingsForCustomer(HttpServletRequest request) {
         String ssn = request.getParameter("selectCustomer");
         List<Booking> bookings = repository.getAllBookingsForCustomer(ssn);
@@ -149,5 +149,7 @@ public class CarRentalController {
                 .addObject("bookings", bookings);
 
     }
+
+    @GetMapping("/log")
 
 }
