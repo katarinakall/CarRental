@@ -154,6 +154,7 @@ public class CarRentalController {
     @GetMapping("/log")
     public  ModelAndView getAllLogs(){
         List<Log> logs = repository.getAllLogs();
+        System.out.println(logs.toString());
         return new ModelAndView("log")
                 .addObject("logs", logs);
     }

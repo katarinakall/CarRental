@@ -87,7 +87,7 @@ public class CarRentalRepositoryImpl implements CarRentalRepository {
             ps.setString(2, ssn);
             ps.executeUpdate();
 
-            String log ="Customer with ssn: " + ssn + " rented car with id: " + carId;
+            String log = "Customer with ssn: " + ssn + " rented car with id: " + carId;
             insertLog(LocalDate.now(), LocalTime.now(), ssn, carId, log);
 
         } catch (SQLException e) {
@@ -116,7 +116,8 @@ public class CarRentalRepositoryImpl implements CarRentalRepository {
             ps.executeUpdate();
 
             if (clean) {
-               String log = "Car with id: " + carId + " has been cleaned.";
+                String log = "Car with id: " + carId + " has been cleaned.";
+                insertLog(LocalDate.now(), LocalTime.now(), null, carId, log);
             }
         } catch (SQLException e) {
             throw new CarRentalRepositoryException("Error when updating clean variable for car with car id: " + carId + ". " + e);
@@ -132,7 +133,8 @@ public class CarRentalRepositoryImpl implements CarRentalRepository {
             ps.executeUpdate();
 
             if (!service) {
-               String log = "Car with id: " + carId + " has been sent to service.";
+                String log = "Car with id: " + carId + " has been sent to service.";
+                insertLog(LocalDate.now(), LocalTime.now(), null, carId, log);
             }
         } catch (SQLException e) {
             throw new CarRentalRepositoryException("Error when updating service variable for car with car id: " + carId + ". " + e);
@@ -175,7 +177,8 @@ public class CarRentalRepositoryImpl implements CarRentalRepository {
             ps.setInt(1, carId);
             ps.executeUpdate();
 
-           String log = "Car with id: " + carId + " has been removed.";
+            String log = "Car with id: " + carId + " has been removed.";
+            insertLog(LocalDate.now(), LocalTime.now(), null, carId, log);
 
         } catch (SQLException e) {
             throw new CarRentalRepositoryException("Error when deleting car with car id: " + carId + ". " + e);
@@ -194,8 +197,6 @@ public class CarRentalRepositoryImpl implements CarRentalRepository {
             ps.setInt(6, 0);
             ps.setBoolean(7, false);
             ps.executeUpdate();
-
-            String log = "A new car has been added.";
 
         } catch (SQLException e) {
             throw new CarRentalRepositoryException("Error when adding new car. " + e);
