@@ -3,6 +3,7 @@ package com.carrental;
 import com.carrental.domain.Booking;
 import com.carrental.domain.Car;
 import com.carrental.domain.Customer;
+import com.carrental.domain.Log;
 import com.carrental.repository.CarRentalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -151,5 +152,10 @@ public class CarRentalController {
     }
 
     @GetMapping("/log")
+    public  ModelAndView getAllLogs(){
+        List<Log> logs = repository.getAllLogs();
+        return new ModelAndView("log")
+                .addObject("logs", logs);
+    }
 
 }

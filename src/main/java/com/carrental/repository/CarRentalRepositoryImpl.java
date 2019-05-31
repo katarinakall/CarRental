@@ -1,7 +1,6 @@
 package com.carrental.repository;
 
-import com.carrental.CarRentalApplication;
-import com.carrental.EventLogger;
+import com.carrental.domain.Log;
 import com.carrental.RentalRequest;
 import com.carrental.ReturnRequest;
 import com.carrental.domain.Booking;
@@ -10,7 +9,6 @@ import com.carrental.domain.CarType;
 
 import com.carrental.domain.Customer;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
@@ -19,13 +17,10 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 
 @Component
 public class CarRentalRepositoryImpl implements CarRentalRepository {
-
-    private EventLogger log = new EventLogger();
 
     @Autowired
     private DataSource dataSource;
@@ -92,7 +87,8 @@ public class CarRentalRepositoryImpl implements CarRentalRepository {
             ps.setString(2, ssn);
             ps.executeUpdate();
 
-            log.info("Customer with ssn: " + ssn + " rented car with id: " + carId);
+            String log ="Customer with ssn: " + ssn + " rented car with id: " + carId;
+            insertLog(LocalDate.now(), LocalTime.now(), ssn, carId, log);
 
         } catch (SQLException e) {
             throw new CarRentalRepositoryException("Error when selecting car with car id: " + carId + ". " + e);
@@ -120,7 +116,7 @@ public class CarRentalRepositoryImpl implements CarRentalRepository {
             ps.executeUpdate();
 
             if (clean) {
-                log.info("Car with id: " + carId + " has been cleaned.");
+               String log = "Car with id: " + carId + " has been cleaned.";
             }
         } catch (SQLException e) {
             throw new CarRentalRepositoryException("Error when updating clean variable for car with car id: " + carId + ". " + e);
@@ -136,7 +132,7 @@ public class CarRentalRepositoryImpl implements CarRentalRepository {
             ps.executeUpdate();
 
             if (!service) {
-                log.info("Car with id: " + carId + " has been sent to service.");
+               String log = "Car with id: " + carId + " has been sent to service.";
             }
         } catch (SQLException e) {
             throw new CarRentalRepositoryException("Error when updating service variable for car with car id: " + carId + ". " + e);
@@ -179,7 +175,7 @@ public class CarRentalRepositoryImpl implements CarRentalRepository {
             ps.setInt(1, carId);
             ps.executeUpdate();
 
-            log.info("Car with id: " + carId + " has been removed.");
+           String log = "Car with id: " + carId + " has been removed.";
 
         } catch (SQLException e) {
             throw new CarRentalRepositoryException("Error when deleting car with car id: " + carId + ". " + e);
@@ -199,7 +195,7 @@ public class CarRentalRepositoryImpl implements CarRentalRepository {
             ps.setBoolean(7, false);
             ps.executeUpdate();
 
-            log.info("A new car has been added.");
+            String log = "A new car has been added.";
 
         } catch (SQLException e) {
             throw new CarRentalRepositoryException("Error when adding new car. " + e);
@@ -312,11 +308,26 @@ public class CarRentalRepositoryImpl implements CarRentalRepository {
         return customerSsn;
     }
 
+    @Override
+    public List<Log> getAllLogs() {
+        try (Connection conn = dataSource.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery("SELECT * from events")) {
+            List<Log> logs = new ArrayList<>();
+            while (rs.next()) {
+                logs.add(rsLog(rs));
+            }
+            return logs;
+        } catch (SQLException e) {
+            throw new CarRentalRepositoryException("Error when getting all logs. " + e);
+        }
+    }
+
     private void insertLog(LocalDate date, LocalTime time, String customer_ssn, int car_id, String log) {
         try (Connection conn = dataSource.getConnection();
              PreparedStatement ps = conn.prepareStatement("INSERT INTO events(log_date, log_time, customer_ssn, car_id, log) VALUES (?,?,?,?,?)")) {
             ps.setDate(1, Date.valueOf(date));
-            ps.setTime(2, Time.valueOf(time) );
+            ps.setTime(2, Time.valueOf(time));
             ps.setString(3, customer_ssn);
             ps.setInt(4, car_id);
             ps.setString(5, log);
@@ -370,6 +381,17 @@ public class CarRentalRepositoryImpl implements CarRentalRepository {
                 rs.getString("name"),
                 rs.getString("surname"),
                 rs.getString("ssn")
+        );
+    }
+
+    private Log rsLog(ResultSet rs) throws SQLException {
+        return new Log(
+                rs.getInt("id"),
+                rs.getDate("log_date"),
+                rs.getTime("log_time"),
+                rs.getString("customer_ssn"),
+                rs.getInt("car_id"),
+                rs.getString("log")
         );
     }
 }

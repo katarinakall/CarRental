@@ -1,5 +1,6 @@
 package com.carrental.repository;
 
+import com.carrental.domain.Log;
 import com.carrental.RentalRequest;
 import com.carrental.ReturnRequest;
 import com.carrental.domain.Booking;
@@ -8,8 +9,6 @@ import com.carrental.domain.CarType;
 import com.carrental.domain.Customer;
 import org.springframework.stereotype.Repository;
 
-import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.List;
 
 
@@ -35,5 +34,6 @@ public interface CarRentalRepository {
     Car getCar(int id);
     List<Customer> getAllCustomers();
     List<Booking> getAllBookingsForCustomer(String ssn);
+    List<Log> getAllLogs();
 }
 
