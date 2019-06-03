@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -97,8 +98,10 @@ public class CarRentalController {
     @GetMapping("/bookings")
     public ModelAndView getAllBookings() {
         List<Booking> bookings = repository.getActiveBookings();
+        List<Log> logs = new ArrayList();
         return new ModelAndView("bookings")
-                .addObject("bookings", bookings);
+                .addObject("bookings", bookings)
+                .addObject("logs", logs);
     }
 
     @GetMapping("/cars")
@@ -145,9 +148,11 @@ public class CarRentalController {
     public ModelAndView getAllBookingsForCustomer(HttpServletRequest request) {
         String ssn = request.getParameter("selectCustomer");
         List<Booking> bookings = repository.getAllBookingsForCustomer(ssn);
+        List<Log> logs = repository.getCustomersLogs(ssn);
         System.out.println(bookings.toString());
         return new ModelAndView("bookings")
-                .addObject("bookings", bookings);
+                .addObject("bookings", bookings)
+                .addObject("logs", logs);
 
     }
 

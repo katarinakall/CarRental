@@ -34,6 +34,25 @@
             </tbody>
         </table>
     </div>
+    <div th:style="${{#lists.isEmpty(logs)} ? 'display:none' : 'display:block'}">
+        <h1>Customers Event Log</h1>
+        <table>
+            <thead>
+            <tr>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Log</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="log : ${logs}">
+                <td th:text="${log.date}">--</td>
+                <td th:text="${log.time}">--</td>
+                <td th:text="${log.message}">--</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
     <div th:replace="template :: startPageButton"/>
 
 </div>

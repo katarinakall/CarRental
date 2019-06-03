@@ -232,7 +232,6 @@ public class CarRentalRepositoryImpl implements CarRentalRepository {
         } catch (SQLException e) {
             throw new CarRentalRepositoryException("Error when getting all bookings for customer with personal identification number: " + ssn + ". " + e);
         }
-
     }
 
     @Override
@@ -321,6 +320,22 @@ public class CarRentalRepositoryImpl implements CarRentalRepository {
             return logs;
         } catch (SQLException e) {
             throw new CarRentalRepositoryException("Error when getting all logs. " + e);
+        }
+    }
+
+    @Override
+    public List<Log> getCustomersLogs(String ssn){
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement("SELECT * FROM events WHERE customer_ssn=?")) {
+            ps.setString(1, ssn);
+            ResultSet rs = ps.executeQuery();
+            List<Log> logs = new ArrayList<>();
+            while (rs.next()) {
+                logs.add(rsLog(rs));
+            }
+            return logs;
+        } catch (SQLException e) {
+            throw new CarRentalRepositoryException("Error when getting logs for customer with personal identification number: " + ssn + ". " + e);
         }
     }
 
