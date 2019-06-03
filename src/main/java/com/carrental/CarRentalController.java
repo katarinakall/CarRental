@@ -98,10 +98,8 @@ public class CarRentalController {
     @GetMapping("/bookings")
     public ModelAndView getAllBookings() {
         List<Booking> bookings = repository.getActiveBookings();
-        List<Log> logs = new ArrayList();
         return new ModelAndView("bookings")
-                .addObject("bookings", bookings)
-                .addObject("logs", logs);
+                .addObject("bookings", bookings);
     }
 
     @GetMapping("/cars")
