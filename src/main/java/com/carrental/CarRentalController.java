@@ -73,6 +73,7 @@ public class CarRentalController {
         String clean = request.getParameter("clean");
         String service = request.getParameter("service");
         String removeCar = request.getParameter("removeCar");
+        String selectCar = request.getParameter("selectCar");
 
         if (clean != null) {
             int carId = Integer.parseInt(clean);
@@ -87,6 +88,13 @@ public class CarRentalController {
         if (removeCar != null) {
             int carId = Integer.parseInt(removeCar);
             repository.removeCar(carId);
+        }
+
+        if (selectCar != null){
+            int carId = Integer.parseInt(selectCar);
+            List<Log> logs = repository.getCarLogs(carId);
+            return new ModelAndView("log")
+                    .addObject("logs", logs);
         }
 
         List<Car> cars = repository.getAllCars();

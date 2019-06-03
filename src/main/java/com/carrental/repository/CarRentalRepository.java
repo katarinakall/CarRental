@@ -36,5 +36,6 @@ public interface CarRentalRepository {
     List<Booking> getAllBookingsForCustomer(String ssn);
     List<Log> getAllLogs();
     List<Log> getCustomersLogs(String ssn);
+    List<Log> getCarLogs(int carId);
 }
 

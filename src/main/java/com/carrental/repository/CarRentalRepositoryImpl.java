@@ -338,6 +338,21 @@ public class CarRentalRepositoryImpl implements CarRentalRepository {
             throw new CarRentalRepositoryException("Error when getting logs for customer with personal identification number: " + ssn + ". " + e);
         }
     }
+    @Override
+    public List<Log> getCarLogs(int carId){
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement("SELECT * FROM events WHERE car_id=?")) {
+            ps.setInt(1, carId);
+            ResultSet rs = ps.executeQuery();
+            List<Log> logs = new ArrayList<>();
+            while (rs.next()) {
+                logs.add(rsLog(rs));
+            }
+            return logs;
+        } catch (SQLException e) {
+            throw new CarRentalRepositoryException("Error when getting logs for car with id: " + carId + ". " + e);
+        }
+    }
 
     private void insertLog(LocalDate date, LocalTime time, String customer_ssn, int car_id, String log) {
         try (Connection conn = dataSource.getConnection();
