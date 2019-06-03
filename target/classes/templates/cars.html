@@ -35,7 +35,7 @@
                     <td><button th:if="${car.clean} == false" name="clean" th:value="${car.id}"><span title="Clean"><i class="fas fa-shower"></i></span></button>
                         <button th:if="${car.service} == true" name="service" th:value="${car.id}"><span title="Service"><i class="fas fa-oil-can"></i></span></button></td>
                     <td><button th:if="${car.mileage} >= 2000" name="removeCar" th:value="${car.id}"><i class="fas fa-trash-alt"></i> Remove car </button></td>
-                    <td><button type="submit" name="selectCar" th:value="${car.id}">Select Car</button></td>
+                    <td><button type="submit" name="carLog" th:value="${car.id}">Car Log</button></td>
                 </form>
             </tr>
             </tbody>

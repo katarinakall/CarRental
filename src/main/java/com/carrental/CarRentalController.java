@@ -15,7 +15,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -73,7 +72,7 @@ public class CarRentalController {
         String clean = request.getParameter("clean");
         String service = request.getParameter("service");
         String removeCar = request.getParameter("removeCar");
-        String selectCar = request.getParameter("selectCar");
+        String carLog = request.getParameter("carLog");
 
         if (clean != null) {
             int carId = Integer.parseInt(clean);
@@ -90,8 +89,8 @@ public class CarRentalController {
             repository.removeCar(carId);
         }
 
-        if (selectCar != null){
-            int carId = Integer.parseInt(selectCar);
+        if (carLog != null){
+            int carId = Integer.parseInt(carLog);
             List<Log> logs = repository.getCarLogs(carId);
             return new ModelAndView("log")
                     .addObject("logs", logs);
