@@ -14,4 +14,17 @@ public enum CarType {
     public String getDisplayName() {
         return displayName;
     }
+
+    public static CarType fromString(String parameterName) {
+        if (parameterName != null) {
+            for (CarType carType : CarType.values()) {
+                if (parameterName.equalsIgnoreCase(carType.displayName)) {
+                    return carType;
+                }
+            }
+        }
+        return null;
+    }
 }
+
+

@@ -14,7 +14,7 @@
         <h1>Rental Form</h1>
         <form action="#" th:action="@{/rentform}" th:object="${rentalRequest}" method="post">
             <label>Enter Date of Birth: </label>
-            <input type="text" required pattern="[0-9]{8}" placeholder="yyyymmdd"  titel="Enter date of birth 8 digits yyyymmdd" maxLength="8a" size="8" th:field="*{dateOfBirth}">
+            <input type="text" required pattern="[0-9]{8}" placeholder="yyyymmdd"  titel="Enter date of birth 8 digits yyyymmdd" maxLength="8" size="8" th:field="*{dateOfBirth}">
             <input type="text" required pattern="[0-9]{4}" title="Enter your 4 last digits" maxLength="4" size="4" th:field="*{lastFourDigits}"/>
             <p><label>Select Car Type:
                 <select id= "cartype" th:field="*{carType}">

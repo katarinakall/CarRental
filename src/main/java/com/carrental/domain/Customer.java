@@ -11,6 +11,9 @@ public class Customer{
     private int nrRented;
     private int distanceDriven;
 
+    public Customer() {
+    }
+
     public Customer(String name, String surname, String ssn, int nrRented) {
         this.name = name;
         this.surname = surname;

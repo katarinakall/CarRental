@@ -1,9 +1,6 @@
 package com.carrental;
 
-import com.carrental.domain.Booking;
-import com.carrental.domain.Car;
-import com.carrental.domain.Customer;
-import com.carrental.domain.Log;
+import com.carrental.domain.*;
 import com.carrental.repository.CarRentalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -43,6 +40,22 @@ public class CarRentalController {
         repository.addBooking(request);
         String ssn = repository.getCustomerSsn(request);
         session.setAttribute("ssn", ssn);
+        session.setAttribute("carType", request.getCarType());
+        if (repository.getCustomer(ssn) == null) {
+            return new ModelAndView("newcustomer")
+                    .addObject("customer", new Customer());
+        }
+        return new ModelAndView("availablecars")
+                .addObject("cars", cars);
+    }
+
+    @PostMapping("/newcustomer")
+    public ModelAndView addNewCustomer(Customer customer, HttpSession session){
+        String ssn = session.getAttribute("ssn").toString();
+        String displayName = session.getAttribute("carType").toString();
+        CarType carType = CarType.fromString(displayName);
+        repository.addNewCustomer(customer.getName(), customer.getSurname(), ssn);
+        List<Car> cars = repository.getAvailableCars(carType);
         return new ModelAndView("availablecars")
                 .addObject("cars", cars);
     }
@@ -89,7 +102,7 @@ public class CarRentalController {
             repository.removeCar(carId);
         }
 
-        if (carLog != null){
+        if (carLog != null) {
             int carId = Integer.parseInt(carLog);
             List<Log> logs = repository.getCarLogs(carId);
             return new ModelAndView("log")
@@ -133,7 +146,7 @@ public class CarRentalController {
 
         Booking booking = repository.getBooking(bookingNumber);
 
-       service.updateReturnedCar(booking.getCarId(), request.getMileageAtReturn());
+        service.updateReturnedCar(booking.getCarId(), request.getMileageAtReturn());
 
         Car car = repository.getCar(booking.getCarId());
         BigDecimal cost = service.calculateCost(request, booking.getPickupDate(), car);
@@ -162,7 +175,7 @@ public class CarRentalController {
     }
 
     @GetMapping("/log")
-    public  ModelAndView getAllLogs(){
+    public ModelAndView getAllLogs() {
         List<Log> logs = repository.getAllLogs();
         return new ModelAndView("log")
                 .addObject("logs", logs);

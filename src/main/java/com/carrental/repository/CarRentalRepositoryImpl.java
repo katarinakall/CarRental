@@ -308,6 +308,9 @@ public class CarRentalRepositoryImpl implements CarRentalRepository {
              PreparedStatement ps = conn.prepareStatement("SELECT * FROM customers where ssn = ?")) {
             ps.setString(1, ssn);
             ResultSet rs = ps.executeQuery();
+            if (!rs.next()){
+                return null;
+            }
             Customer customer = rsCustomer(rs);
             return customer;
         } catch (SQLException e) {
@@ -318,12 +321,13 @@ public class CarRentalRepositoryImpl implements CarRentalRepository {
     @Override
     public void addNewCustomer(String name, String surname, String ssn) {
         try (Connection conn = dataSource.getConnection();
-             PreparedStatement ps = conn.prepareStatement("INSERT INTO customers(ssn, name, surname, nr_rent, distance_driven) VALUES (?,?,?,?,?) ")) {
+             PreparedStatement ps = conn.prepareStatement("INSERT INTO customers(ssn, name, surname, nr_rented, distance_driven) VALUES (?,?,?,?,?) ")) {
             ps.setString(1, ssn);
             ps.setString(2, name);
             ps.setString(3, surname);
             ps.setInt(4, 1);
             ps.setInt(5, 0);
+            ps.executeUpdate();
         } catch (SQLException e) {
             throw new CarRentalRepositoryException("Error when adding new customer with ssn: " + ssn + ". " + e);
         }
@@ -466,7 +470,7 @@ public class CarRentalRepositoryImpl implements CarRentalRepository {
                 rs.getString("surname"),
                 rs.getString("ssn"),
                 rs.getString("member"),
-                rs.getInt("nr_rent"),
+                rs.getInt("nr_rented"),
                 rs.getInt("distance_driven")
         );
     }
