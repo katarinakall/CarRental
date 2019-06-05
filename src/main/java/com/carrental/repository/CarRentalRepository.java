@@ -37,5 +37,9 @@ public interface CarRentalRepository {
     List<Log> getAllLogs();
     List<Log> getCustomersLogs(String ssn);
     List<Log> getCarLogs(int carId);
+    void addNewCustomer(String name, String surname, String ssn);
+    Customer getCustomer(String ssn);
+    void updateCustomersMemberStatus(String ssn, String member);
+    void updateCustomersNrRent(int nrRented, int distanceDriven, String ssn);
 }
 

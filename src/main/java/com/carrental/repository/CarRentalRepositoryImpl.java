@@ -303,6 +303,58 @@ public class CarRentalRepositoryImpl implements CarRentalRepository {
     }
 
     @Override
+    public Customer getCustomer(String ssn) {
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement("SELECT * FROM customers where ssn = ?")) {
+            ps.setString(1, ssn);
+            ResultSet rs = ps.executeQuery();
+            Customer customer = rsCustomer(rs);
+            return customer;
+        } catch (SQLException e) {
+            throw new CarRentalRepositoryException("Error when getting customer with ssn: " + ssn + ". " + e);
+        }
+    }
+
+    @Override
+    public void addNewCustomer(String name, String surname, String ssn) {
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement("INSERT INTO customers(ssn, name, surname, nr_rent, distance_driven) VALUES (?,?,?,?,?) ")) {
+            ps.setString(1, ssn);
+            ps.setString(2, name);
+            ps.setString(3, surname);
+            ps.setInt(4, 1);
+            ps.setInt(5, 0);
+        } catch (SQLException e) {
+            throw new CarRentalRepositoryException("Error when adding new customer with ssn: " + ssn + ". " + e);
+        }
+    }
+
+    @Override
+    public void updateCustomersMemberStatus(String ssn, String member) {
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement("UPDATE customers SET member = ? WHERE ssn = ?")) {
+            ps.setString(1, member);
+            ps.setString(2, ssn);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new CarRentalRepositoryException("Error when updating customers member status." + e);
+        }
+    }
+
+    @Override
+    public void updateCustomersNrRent(int nrRented, int distanceDriven, String ssn) {
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement("UPDATE customers SET nr_rented = ?, distance_driven = ? WHERE ssn = ?")){
+            ps.setInt(1, nrRented);
+            ps.setInt(2, distanceDriven);
+            ps.setString(3, ssn);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new CarRentalRepositoryException("Error when updating times rented for customer with ssn: " + ssn + ". " + e);
+        }
+    }
+
+    @Override
     public String getCustomerSsn(RentalRequest rentalRequest) {
         String customerSsn = (rentalRequest.getDateOfBirth() + "-" + rentalRequest.getLastFourDigits());
         return customerSsn;
@@ -324,7 +376,7 @@ public class CarRentalRepositoryImpl implements CarRentalRepository {
     }
 
     @Override
-    public List<Log> getCustomersLogs(String ssn){
+    public List<Log> getCustomersLogs(String ssn) {
         try (Connection conn = dataSource.getConnection();
              PreparedStatement ps = conn.prepareStatement("SELECT * FROM events WHERE customer_ssn=?")) {
             ps.setString(1, ssn);
@@ -338,8 +390,9 @@ public class CarRentalRepositoryImpl implements CarRentalRepository {
             throw new CarRentalRepositoryException("Error when getting logs for customer with personal identification number: " + ssn + ". " + e);
         }
     }
+
     @Override
-    public List<Log> getCarLogs(int carId){
+    public List<Log> getCarLogs(int carId) {
         try (Connection conn = dataSource.getConnection();
              PreparedStatement ps = conn.prepareStatement("SELECT * FROM events WHERE car_id=?")) {
             ps.setInt(1, carId);
@@ -411,7 +464,10 @@ public class CarRentalRepositoryImpl implements CarRentalRepository {
         return new Customer(
                 rs.getString("name"),
                 rs.getString("surname"),
-                rs.getString("ssn")
+                rs.getString("ssn"),
+                rs.getString("member"),
+                rs.getInt("nr_rent"),
+                rs.getInt("distance_driven")
         );
     }
 
