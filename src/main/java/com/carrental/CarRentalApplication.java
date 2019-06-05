@@ -47,11 +47,11 @@ public class CarRentalApplication implements CommandLineRunner {
         insertCar("CDE 789", "Minibus", 0, true, true, 0, false);
         insertCar("EFG 789", "Minibus", 0, true, false, 0, false);
 
-        insertCustomer("19900810-1234", "Arne", "Svensson", 0, 0);
-        insertCustomer("19810901-1234", "Anna", "Larsson", 2, 500);
-        insertCustomer("19720810-1234", "Berit", "Svensson", 0, 0);
-        insertCustomer("19900110-1234", "Ulla-Bella", "Björnesson", 0, 0);
-        insertCustomer("19800810-1234", "Sven", "Ström", 1, 50);
+        insertCustomer("19900810-1234", "Arne", "Svensson", "Gold", 5, 1000);
+        insertCustomer("19810901-1234", "Anna", "Larsson", "Silver", 5, 500);
+        insertCustomer("19720810-1234", "Berit", "Svensson", "Bronze", 3, 0);
+        insertCustomer("19900110-1234", "Ulla-Bella", "Björnesson", "", 0, 0);
+        insertCustomer("19800810-1234", "Sven", "Ström", "", 1, 50);
 
         insertLog(LocalDate.now(), LocalTime.now(), "19900810-1234", 1, "test");
 
@@ -76,17 +76,18 @@ public class CarRentalApplication implements CommandLineRunner {
 
     }
 
-    private void insertCustomer(String ssn, String name, String surname, int nrRented, int distanceDriven) {
+    private void insertCustomer(String ssn, String name, String surname, String member, int nrRented, int distanceDriven) {
         jdbcTemplate.update(
                 new PreparedStatementCreator() {
                     public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
                         PreparedStatement ps =
-                                connection.prepareStatement("INSERT INTO customers(ssn, name, surname, nr_rented, distance_driven) VALUES (?,?,?,?,?) ", new String[]{"id"});
+                                connection.prepareStatement("INSERT INTO customers(ssn, name, surname, member, nr_rented, distance_driven) VALUES (?,?,?,?,?,?) ", new String[]{"id"});
                         ps.setString(1, ssn);
                         ps.setString(2, name);
                         ps.setString(3, surname);
-                        ps.setInt(4, nrRented);
-                        ps.setInt(5, distanceDriven);
+                        ps.setString(4, member);
+                        ps.setInt(5, nrRented);
+                        ps.setInt(6, distanceDriven);
                         return ps;
                     }
                 });

@@ -1,7 +1,6 @@
 package com.carrental;
 
-import com.carrental.domain.Car;
-import com.carrental.domain.CarType;
+import com.carrental.domain.*;
 import com.carrental.repository.CarRentalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -18,12 +17,12 @@ public class CarRentalService {
     @Autowired
     private CarRentalRepository repository;
 
-    public BigDecimal calculateCost (ReturnRequest returnRequest, LocalDate pickUpDate, Car car){
+    public BigDecimal calculateCost(CostVariables costVariables, Car car) {
         BigDecimal rentalCost = new BigDecimal(0);
-        BigDecimal baseDayRental = new BigDecimal(100);
+        BigDecimal baseDayRental = new BigDecimal(costVariables.getBaseDayRental());
         BigDecimal kmPrice = new BigDecimal(10);
-        int numberOfDays = calculateNumberOfDays(pickUpDate, returnRequest.getReturnDate());
-        int numberOfKm = calculateNumberOfKm(car.getMileage(), returnRequest.getMileageAtReturn());
+        int numberOfDays = costVariables.getNumberOfDays();
+        int numberOfKm = costVariables.getNumberOfKm();
 
         BigDecimal days = new BigDecimal(numberOfDays);
         BigDecimal km = new BigDecimal(numberOfKm);
@@ -41,7 +40,7 @@ public class CarRentalService {
             case VAN:
                 BigDecimal dayCostV = baseDayRental.multiply(days).multiply(van);
                 BigDecimal kmCostV = kmPrice.multiply(km);
-                 rentalCost = dayCostV.add(kmCostV);
+                rentalCost = dayCostV.add(kmCostV);
                 break;
             case MINIBUS:
                 BigDecimal dayCostMB = baseDayRental.multiply(days).multiply(minibus);
@@ -53,19 +52,82 @@ public class CarRentalService {
         return rentalCost.setScale(2, RoundingMode.UP);
     }
 
-    public int calculateNumberOfKm ( int kmAtPickup, int kmAtReturn){
+    public CostVariables memberDiscount(ReturnRequest returnRequest, LocalDate pickUpDate, int carId, String ssn) {
+        CostVariables costVariables = new CostVariables();
+        int numberOfDays = calculateNumberOfDays(pickUpDate, returnRequest.getReturnDate());
+        int numberOfKm = calculateNumberOfKm(repository.getCar(carId).getMileage(), returnRequest.getMileageAtReturn());
+        int baseDayRental = 100;
+
+        String memberStatus = repository.getCustomer(ssn).getMember();
+
+
+        switch (memberStatus) {
+            case"":
+                costVariables.setBaseDayRental(baseDayRental);
+                costVariables.setNumberOfDays(numberOfDays);
+                costVariables.setNumberOfKm(numberOfKm);
+                break;
+            case "Bronze":
+                costVariables.setBaseDayRental(baseDayRental / 2);
+                costVariables.setNumberOfDays(numberOfDays);
+                costVariables.setNumberOfKm(numberOfKm);
+                break;
+            case "Silver":
+                costVariables.setBaseDayRental(baseDayRental / 2);
+                if (numberOfDays == 3) {
+                    numberOfDays = numberOfDays - 1;
+                    costVariables.setNumberOfDays(numberOfDays);
+                }
+                if (numberOfDays > 3) {
+                    numberOfDays = numberOfDays - 2;
+                    costVariables.setNumberOfDays(numberOfDays);
+                } else {
+                    costVariables.setNumberOfDays(numberOfDays);
+                }
+                costVariables.setNumberOfKm(numberOfKm);
+                break;
+            case "Gold":
+                costVariables.setBaseDayRental(baseDayRental / 2);
+                if (numberOfDays == 3) {
+                    numberOfDays = numberOfDays - 1;
+                    costVariables.setNumberOfDays(numberOfDays);
+                }
+                if (numberOfDays > 3) {
+                    numberOfDays = numberOfDays - 2;
+                    costVariables.setNumberOfDays(numberOfDays);
+                } else {
+                    costVariables.setNumberOfDays(numberOfDays);
+                }
+                if (numberOfKm <= 20) {
+                    costVariables.setNumberOfKm(0);
+                }
+                costVariables.setNumberOfKm(numberOfKm-20);
+                break;
+        }
+        return costVariables;
+    }
+
+
+    public int calculateNumberOfKm(int kmAtPickup, int kmAtReturn) {
         return kmAtReturn - kmAtPickup;
     }
 
-    public int calculateNumberOfDays (LocalDate pickupDate, LocalDate returnDate){
+    public int calculateNumberOfDays(LocalDate pickupDate, LocalDate returnDate) {
         return (int) DAYS.between(pickupDate, returnDate);
     }
 
-    public void updateReturnedCar(int carId, int mileageAtReturn){
+    public void updateReturnedCar(int carId, int mileageAtReturn, String ssn) {
         repository.toggleCarAvailability(carId, true);
         repository.updateCarMileage(carId, mileageAtReturn);
         repository.updateTimesRented(carId);
         repository.toggleCarCleaning(carId, false);
+        repository.updateCustomerDistanceDriven(mileageAtReturn, ssn);
+        repository.updateCustomersNrRented(ssn);
+    }
+
+    public void selectCar(int carId, String ssn) {
+        repository.selectCar(carId, ssn);
+        repository.toggleCarAvailability(carId, false);
     }
 
 }

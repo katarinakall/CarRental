@@ -40,6 +40,7 @@ public interface CarRentalRepository {
     void addNewCustomer(String name, String surname, String ssn);
     Customer getCustomer(String ssn);
     void updateCustomersMemberStatus(String ssn, String member);
-    void updateCustomersNrRent(int nrRented, int distanceDriven, String ssn);
+    void updateCustomersNrRented(String ssn);
+    void updateCustomerDistanceDriven(int distanceDriven, String ssn);
 }
 

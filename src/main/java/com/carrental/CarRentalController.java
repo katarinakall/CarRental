@@ -65,8 +65,7 @@ public class CarRentalController {
         String car = request.getParameter("selectCar");
         int carId = Integer.parseInt(car);
         String ssn = session.getAttribute("ssn").toString();
-        repository.selectCar(carId, ssn);
-        repository.toggleCarAvailability(carId, false);
+        service.selectCar(carId, ssn);
         List<Booking> bookings = repository.getActiveBookings();
         return new ModelAndView("bookings")
                 .addObject("bookings", bookings);
@@ -146,11 +145,13 @@ public class CarRentalController {
 
         Booking booking = repository.getBooking(bookingNumber);
 
-        service.updateReturnedCar(booking.getCarId(), request.getMileageAtReturn());
-
         Car car = repository.getCar(booking.getCarId());
-        BigDecimal cost = service.calculateCost(request, booking.getPickupDate(), car);
+        CostVariables costVariables = service.memberDiscount(request, booking.getPickupDate(), booking.getCarId(), booking.getCustomerSSN());
+        BigDecimal cost = service.calculateCost(costVariables, car);
 
+        service.updateReturnedCar(booking.getCarId(), request.getMileageAtReturn(), booking.getCustomerSSN());
+
+        System.out.println(costVariables.toString());
         return new ModelAndView("cost")
                 .addObject("cost", cost);
     }
@@ -171,7 +172,6 @@ public class CarRentalController {
         return new ModelAndView("bookings")
                 .addObject("bookings", bookings)
                 .addObject("logs", logs);
-
     }
 
     @GetMapping("/log")
@@ -180,5 +180,4 @@ public class CarRentalController {
         return new ModelAndView("log")
                 .addObject("logs", logs);
     }
-
 }

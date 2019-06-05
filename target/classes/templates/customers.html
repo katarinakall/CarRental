@@ -20,6 +20,7 @@
                 <th>Name</th>
                 <th>Surname</th>
                 <th>Personal identity number</th>
+                <th>Member status</th>
             </tr>
             </thead>
             <tbody>
@@ -28,6 +29,7 @@
                     <td th:text="${customer.name}">--</td>
                     <td th:text="${customer.surname}">--</td>
                     <td th:text="${customer.ssn}">--</td>
+                    <td th:text="${customer.member}">--</td>
                     <td><button type="submit" name="selectCustomer" th:value="${customer.ssn}">Select Customer</button></td>
                 </form>
             </tr>

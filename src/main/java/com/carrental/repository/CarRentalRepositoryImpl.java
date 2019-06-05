@@ -321,12 +321,13 @@ public class CarRentalRepositoryImpl implements CarRentalRepository {
     @Override
     public void addNewCustomer(String name, String surname, String ssn) {
         try (Connection conn = dataSource.getConnection();
-             PreparedStatement ps = conn.prepareStatement("INSERT INTO customers(ssn, name, surname, nr_rented, distance_driven) VALUES (?,?,?,?,?) ")) {
+             PreparedStatement ps = conn.prepareStatement("INSERT INTO customers(ssn, name, surname, member, nr_rented, distance_driven) VALUES (?,?,?,?,?,?) ")) {
             ps.setString(1, ssn);
             ps.setString(2, name);
             ps.setString(3, surname);
-            ps.setInt(4, 1);
+            ps.setString(4, "");
             ps.setInt(5, 0);
+            ps.setInt(6, 0);
             ps.executeUpdate();
         } catch (SQLException e) {
             throw new CarRentalRepositoryException("Error when adding new customer with ssn: " + ssn + ". " + e);
@@ -346,12 +347,45 @@ public class CarRentalRepositoryImpl implements CarRentalRepository {
     }
 
     @Override
-    public void updateCustomersNrRent(int nrRented, int distanceDriven, String ssn) {
+    public void updateCustomersNrRented(String ssn){
+        int nrRented = getCustomer(ssn).getNrRented() + 1;
+        if(nrRented == 3){
+            String memberStatus = "Bronze";
+            updateCustomersMemberStatus(ssn, memberStatus);
+            String log = "Customer with ssn: " + ssn + " have reached new member status: " + memberStatus;
+            insertLog(LocalDate.now(), LocalTime.now(), ssn, 0, log);
+        }
+
+        if(nrRented == 5){
+            String memberStatus = "Silver";
+            updateCustomersMemberStatus(ssn, memberStatus);
+            String log = "Customer with ssn: " + ssn + " have reached new member status: " + memberStatus;
+            insertLog(LocalDate.now(), LocalTime.now(), ssn, 0, log);
+        }
+        if ((nrRented == 5) && (getCustomer(ssn).getDistanceDriven() == 1000)){
+            String memberStatus = "Gold";
+            updateCustomersMemberStatus(ssn, memberStatus);
+            String log = "Customer with ssn: " + ssn + " have reached new member status: " + memberStatus;
+            insertLog(LocalDate.now(), LocalTime.now(), ssn, 0, log);
+        }
+
         try (Connection conn = dataSource.getConnection();
-             PreparedStatement ps = conn.prepareStatement("UPDATE customers SET nr_rented = ?, distance_driven = ? WHERE ssn = ?")){
+             PreparedStatement ps = conn.prepareStatement("UPDATE customers SET nr_rented = ? WHERE ssn = ?")){
             ps.setInt(1, nrRented);
-            ps.setInt(2, distanceDriven);
-            ps.setString(3, ssn);
+            ps.setString(2, ssn);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new CarRentalRepositoryException("Error when updating times rented for customer with ssn: " + ssn + ". " + e);
+        }
+    }
+
+    @Override
+    public void updateCustomerDistanceDriven(int distanceDriven, String ssn) {
+        int newMileage = getCustomer(ssn).getDistanceDriven() + distanceDriven;
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement("UPDATE customers SET distance_driven = ? WHERE ssn = ?")){
+            ps.setInt(1, newMileage);
+            ps.setString(2, ssn);
             ps.executeUpdate();
         } catch (SQLException e) {
             throw new CarRentalRepositoryException("Error when updating times rented for customer with ssn: " + ssn + ". " + e);
