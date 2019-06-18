@@ -151,7 +151,6 @@ public class CarRentalController {
 
         service.updateReturnedCar(booking.getCarId(), request.getMileageAtReturn(), booking.getCustomerSSN());
 
-        System.out.println(costVariables.toString());
         return new ModelAndView("cost")
                 .addObject("cost", cost);
     }

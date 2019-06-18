@@ -1,5 +1,7 @@
 package com.carrental;
 
+import com.carrental.discountStrategy.DiscountStrategy;
+import com.carrental.discountStrategy.DiscountStrategyFactory;
 import com.carrental.domain.*;
 import com.carrental.repository.CarRentalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,7 @@ public class CarRentalService {
 
     @Autowired
     private CarRentalRepository repository;
+
 
     public BigDecimal calculateCost(CostVariables costVariables, Car car) {
         BigDecimal rentalCost = new BigDecimal(0);
@@ -53,57 +56,17 @@ public class CarRentalService {
     }
 
     public CostVariables memberDiscount(ReturnRequest returnRequest, LocalDate pickUpDate, int carId, String ssn) {
-        CostVariables costVariables = new CostVariables();
+        DiscountStrategyFactory discountStrategyFactory = new DiscountStrategyFactory();
         int numberOfDays = calculateNumberOfDays(pickUpDate, returnRequest.getReturnDate());
         int numberOfKm = calculateNumberOfKm(repository.getCar(carId).getMileage(), returnRequest.getMileageAtReturn());
         int baseDayRental = 100;
 
         String memberStatus = repository.getCustomer(ssn).getMember();
 
+        DiscountStrategy discountStrategy = discountStrategyFactory.fromMemberStatus(memberStatus);
+        CostVariables costVariables = discountStrategy.getCostVariables(numberOfDays, numberOfKm, baseDayRental);
 
-        switch (memberStatus) {
-            case"":
-                costVariables.setBaseDayRental(baseDayRental);
-                costVariables.setNumberOfDays(numberOfDays);
-                costVariables.setNumberOfKm(numberOfKm);
-                break;
-            case "Bronze":
-                costVariables.setBaseDayRental(baseDayRental / 2);
-                costVariables.setNumberOfDays(numberOfDays);
-                costVariables.setNumberOfKm(numberOfKm);
-                break;
-            case "Silver":
-                costVariables.setBaseDayRental(baseDayRental / 2);
-                if (numberOfDays == 3) {
-                    numberOfDays = numberOfDays - 1;
-                    costVariables.setNumberOfDays(numberOfDays);
-                }
-                if (numberOfDays > 3) {
-                    numberOfDays = numberOfDays - 2;
-                    costVariables.setNumberOfDays(numberOfDays);
-                } else {
-                    costVariables.setNumberOfDays(numberOfDays);
-                }
-                costVariables.setNumberOfKm(numberOfKm);
-                break;
-            case "Gold":
-                costVariables.setBaseDayRental(baseDayRental / 2);
-                if (numberOfDays == 3) {
-                    numberOfDays = numberOfDays - 1;
-                    costVariables.setNumberOfDays(numberOfDays);
-                }
-                if (numberOfDays > 3) {
-                    numberOfDays = numberOfDays - 2;
-                    costVariables.setNumberOfDays(numberOfDays);
-                } else {
-                    costVariables.setNumberOfDays(numberOfDays);
-                }
-                if (numberOfKm <= 20) {
-                    costVariables.setNumberOfKm(0);
-                }
-                costVariables.setNumberOfKm(numberOfKm-20);
-                break;
-        }
+
         return costVariables;
     }
 
